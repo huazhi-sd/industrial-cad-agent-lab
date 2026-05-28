@@ -1,4 +1,4 @@
-# onshape-cn-hardware-skills
+# onshape-industrial-hardware-skills
 
 Chinese manufacturing CAD skills for Onshape and AI coding agents.
 
@@ -24,8 +24,7 @@ General CAD agents can call APIs, but they often lack manufacturing judgement. T
 Generate a close-coiled torsion spring STEP:
 
 ```powershell
-& "C:\Users\cokewithice\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" `
-  .\skills\torsion-spring\scripts\generate_torsion_spring.py `
+python .\skills\torsion-spring\scripts\generate_torsion_spring.py `
   --wire-d 0.25 `
   --coil-od 2.45 `
   --turns 3 `
