@@ -79,6 +79,30 @@ $env:ONSHAPE_SECRET_KEY="replace_with_secret_key"
 
 Onshape 上传 STEP 应优先使用 `multipart/form-data`，不要把 STEP 文件作为裸 body 直接 POST。裸 body 对大文件更容易触发 `413 Request Entity Too Large` 或服务端拒绝。
 
+当前验证有效的上传路径：
+
+```text
+POST /api/v6/blobelements/d/{documentId}/w/{workspaceId}
+```
+
+表单字段：
+
+```text
+storeInDocument=true
+allowFaultyParts=false
+flattenAssemblies=false
+formatName=STEP
+file=<STEP file>
+```
+
+上传返回中会包含 `translationId`，然后查询：
+
+```text
+GET /api/v10/translations/{translationId}
+```
+
+直到 `requestState = DONE`，再读取 `resultElementIds`。
+
 大文件上传失败时，按以下顺序排查：
 
 1. 确认使用的是 `requests` multipart 上传。

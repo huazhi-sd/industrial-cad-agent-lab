@@ -13,12 +13,19 @@ This reference describes the safe sequence for uploading a generated spring STEP
 
 ## Import Parameters
 
-Use these defaults for STEP upload:
+Use the blob element upload endpoint for STEP import:
+
+```text
+POST /api/v6/blobelements/d/{documentId}/w/{workspaceId}
+```
+
+Use these multipart form defaults:
 
 ```text
 storeInDocument=true
 allowFaultyParts=false
 flattenAssemblies=false
+formatName=STEP
 ```
 
 After import, verify:
