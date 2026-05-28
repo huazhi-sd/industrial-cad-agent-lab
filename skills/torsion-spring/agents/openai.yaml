@@ -1,0 +1,8 @@
+interface:
+  display_name: "Torsion Spring"
+  short_description: "Generate clean close-coiled torsion spring STEP models."
+  brand_color: "#2F6F4E"
+  default_prompt: "Use $torsion-spring to generate a close-coiled torsion spring STEP from wire diameter, coil outside diameter, turn count, and leg lengths."
+
+policy:
+  allow_implicit_invocation: true
