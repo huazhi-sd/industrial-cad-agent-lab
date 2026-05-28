@@ -18,6 +18,7 @@ General CAD agents can call APIs, but they often lack manufacturing judgement. T
 | Skill | Path | Status |
 | --- | --- | --- |
 | Torsion spring generation | `skills/torsion-spring` | Draft, usable locally |
+| STEP left-view inspection | `skills/step-inspector` | Draft, validated on G1 meter layout |
 
 ## Quick start
 
@@ -41,6 +42,19 @@ python .\skills\torsion-spring\scripts\generate_torsion_spring.py `
 
 The script uses `pitch = wire_d` by default, so neighboring turns are tangent/close-coiled unless you intentionally set another pitch.
 
+Render a calibrated hidden-shell left view from a STEP file:
+
+```powershell
+python .\skills\step-inspector\scripts\render_left_view.py `
+  --step <private-project>\g1-1p-528_front_aligned.step `
+  --output <private-project>\corrected_left_view.png `
+  --hide 20 `
+  --label-solids `
+  --view-from xmax `
+  --mirror-y `
+  --tolerance 1.0
+```
+
 For detailed local setup, see `docs/environment-setup.zh-CN.md`.
 
 ## Repository rules
@@ -54,6 +68,7 @@ For detailed local setup, see `docs/environment-setup.zh-CN.md`.
 ## Roadmap
 
 - Torsion spring fitting against an imported original STEP.
+- STEP inspection views that match an engineer's CAD view cube.
 - Onshape upload and assembly replacement helper.
 - Plastic shell supplier simplification skill.
 - Rivet and screw inference skill for small appliance/electrical products.
