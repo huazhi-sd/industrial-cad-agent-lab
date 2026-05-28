@@ -43,6 +43,7 @@ def onshape_headers(method: str, path: str, query: str = "", content_type: str =
         "On-Nonce": nonce,
         "Authorization": f"On {access_key}:HmacSHA256:{signature}",
         "Accept": "application/json",
+        "Content-Type": content_type,
     }
 
 
