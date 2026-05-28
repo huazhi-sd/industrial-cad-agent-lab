@@ -21,6 +21,12 @@ General CAD agents can call APIs, but they often lack manufacturing judgement. T
 
 ## Quick start
 
+Install dependencies:
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
 Generate a close-coiled torsion spring STEP:
 
 ```powershell
@@ -34,6 +40,8 @@ python .\skills\torsion-spring\scripts\generate_torsion_spring.py `
 ```
 
 The script uses `pitch = wire_d` by default, so neighboring turns are tangent/close-coiled unless you intentionally set another pitch.
+
+For detailed local setup, see `docs/environment-setup.zh-CN.md`.
 
 ## Repository rules
 

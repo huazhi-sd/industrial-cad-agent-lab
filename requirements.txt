@@ -1,0 +1,2 @@
+requests>=2.31
+cadquery>=2.5
