@@ -148,3 +148,35 @@ node --version
 npm --version
 uv --version
 ```
+
+## 8. 2026-05-29 安装 CAD Skills
+
+已从 `earthtojake/text-to-cad` 安装 3 个核心 skill 到本机 Codex：
+
+| Skill | 本机位置 | 用途 |
+| --- | --- | --- |
+| `cad` | `%USERPROFILE%\.codex\skills\cad` | STEP-first 参数化 CAD 生成、检查、验证 |
+| `cad-viewer` | `%USERPROFILE%\.codex\skills\cad-viewer` | 启动本地 CAD Viewer，查看 STEP/STP/GLB/STL/DXF 等文件 |
+| `step-parts` | `%USERPROFILE%\.codex\skills\step-parts` | 从 step.parts 搜索并下载常见标准件/采购件 STEP |
+
+安装命令：
+
+```powershell
+$SCRIPT="$env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py"
+& "$env:LocalAppData\Programs\Python\Python312\python.exe" $SCRIPT `
+  --repo earthtojake/text-to-cad `
+  --path skills/cad skills/cad-viewer skills/step-parts
+```
+
+暂未安装：
+
+- `urdf`、`sdf`、`srdf`：偏机器人描述和仿真格式，当前工业结构项目暂不需要；
+- `gcode`、`bambu-labs`：偏 3D 打印；
+- `sendcutsend`：偏钣金/在线加工交付，后续需要时再装。
+
+安装后需要重启 Codex，新的 skill 才会进入会话可用列表。未重启前，文件已经在本机，但当前对话不一定能自动触发这些 skill。
+
+资料：
+
+- https://github.com/earthtojake/text-to-cad
+- https://www.cadskills.xyz
