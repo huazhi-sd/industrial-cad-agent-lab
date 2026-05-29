@@ -57,6 +57,9 @@ python .\skills\step-inspector\scripts\render_left_view.py `
 
 For detailed local setup, see `docs/environment-setup.zh-CN.md`.
 
+For the current AI + industrial 3D learning roadmap, see
+`docs/ai-industrial-3d-learning-2026-05-29.zh-CN.md`.
+
 ## Repository rules
 
 - Do not commit Onshape API keys, secrets, customer files, or private supplier drawings.

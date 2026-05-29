@@ -115,3 +115,36 @@ GET /api/v10/translations/{translationId}
 - 能沉淀为通用能力的环境补充，要写入 `requirements.txt` 或文档。
 - 能沉淀为流程经验的失败，要写入 `docs/` 或对应 skill 的 `references/`。
 - 不上传公司原始文件、API 密钥、本地绝对路径或临时大文件。
+
+## 7. 2026-05-29 本机环境记录
+
+今天把后续 AI + CAD 工作会反复使用的基础环境补齐：
+
+| 工具 | 版本/用途 | 状态 |
+| --- | --- | --- |
+| Python | 3.12.10，用于 Onshape API、CadQuery/OCP、脚本化几何处理 | 已安装 |
+| pip | 26.1.1 | 已安装 |
+| requests | 2.34.2，用于 REST API | 已安装 |
+| cadquery | 2.7.0，用于生成/读取 STEP 和参数化建模 | 已安装 |
+| matplotlib | 3.10.9，用于视图渲染 | 已安装 |
+| Node.js | 24.16.0，用于 MCP、前端预览、JavaScript 工具 | 已安装 |
+| npm | 11.13.0 | 已安装 |
+| uv | 0.11.15，用于 Python 项目和 MCP server 运行 | 已安装 |
+| Git | 2.54.0 | 已安装 |
+
+当前 Codex 进程可能不会立即读取新的 Windows PATH。若命令行仍提示 `python` 找不到，可先重新打开 PowerShell；如果仍指向 Microsoft Store 占位符，应关闭 Windows 的 Python App execution aliases。
+
+已验证的正式 Python 路径：
+
+```powershell
+$PYTHON="$env:LocalAppData\Programs\Python\Python312\python.exe"
+& $PYTHON -c "import requests, cadquery, matplotlib; print('ok')"
+```
+
+Node 和 uv 由 `winget` 安装到用户目录。重新打开 shell 后应可直接运行：
+
+```powershell
+node --version
+npm --version
+uv --version
+```
