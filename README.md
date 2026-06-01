@@ -1,16 +1,16 @@
-# onshape-industrial-hardware-skills
+# hardware-cad-agent-lab
 
-Chinese manufacturing CAD skills for Onshape and AI coding agents.
+Chinese manufacturing CAD skills and experiments for hardware CAD agents.
 
-This repository starts from real intelligent circuit breaker structure work. The first skill is a torsion spring generator that turns engineering parameters into a clean STEP model suitable for Onshape import.
+This repository starts from real structure-design work and small public CAD experiments. It is not tied to one CAD platform: current workflows use STEP, build123d/CadQuery-style scripts, CAD Viewer, AgentCAD, FreeCAD/Onshape MCP experiments, and GitHub-based process notes.
 
 ## Why this repo exists
 
-General CAD agents can call APIs, but they often lack manufacturing judgement. This repo captures repeatable structure-design workflows as small skills and scripts:
+General CAD agents can call APIs, but they often lack manufacturing judgement. This repo captures repeatable structure-design workflows as small skills, scripts, examples, and review notes:
 
 - Generate mechanical parts from engineering parameters.
 - Repair or replace imported STEP parts with cleaner geometry.
-- Keep geometry decisions explainable for engineers and suppliers.
+- Keep geometry decisions explainable for engineers, reviewers, and suppliers.
 - Avoid storing API keys or company-sensitive model files in code.
 
 ## Current skills
@@ -19,6 +19,7 @@ General CAD agents can call APIs, but they often lack manufacturing judgement. T
 | --- | --- | --- |
 | Torsion spring generation | `skills/torsion-spring` | Draft, usable locally |
 | STEP left-view inspection | `skills/step-inspector` | Draft, validated on G1 meter layout |
+| Onshape REST API client | `skills/onshape-client` | Draft, kept as one optional CAD backend |
 
 ## Quick start
 
@@ -57,6 +58,15 @@ python .\skills\step-inspector\scripts\render_left_view.py `
 
 For detailed local setup, see `docs/environment-setup.zh-CN.md`.
 
+Parse an Onshape document URL and prepare API operations:
+
+```powershell
+python .\skills\onshape-client\scripts\onshape_client.py parse-url `
+  "https://cad.onshape.com/documents/<did>/w/<wid>/e/<eid>"
+```
+
+After setting `ONSHAPE_ACCESS_KEY` and `ONSHAPE_SECRET_KEY`, the same script can list elements, list parts, import a CAD file, and export a Part Studio STEP.
+
 For the current AI + industrial 3D learning roadmap, see
 `docs/ai-industrial-3d-learning-2026-05-29.zh-CN.md`.
 
@@ -72,6 +82,8 @@ For the current AI + industrial 3D learning roadmap, see
 
 - Torsion spring fitting against an imported original STEP.
 - STEP inspection views that match an engineer's CAD view cube.
-- Onshape upload and assembly replacement helper.
+- Onshape upload, import/export, element/part listing, and assembly replacement helper.
 - Plastic shell supplier simplification skill.
 - Rivet and screw inference skill for small appliance/electrical products.
+- PC hardware layout datums, including motherboard/GPU/case examples.
+- FreeCAD and AgentCAD MCP comparison workflows.
