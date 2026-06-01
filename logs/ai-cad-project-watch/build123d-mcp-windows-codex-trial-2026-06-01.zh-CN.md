@@ -169,3 +169,70 @@ Exported to D:\cdxwork\build123d-mcp-lab\datum_plate_m3.step
 - tested uv tool run, launcher, fixed venv
 - likely issue around `multiprocessing.spawn` from MCP stdio host
 
+## Follow-up: no-worker diagnostic launcher
+
+为了进一步定位问题，新增本地实验入口：
+
+```text
+D:\cdxwork\build123d-mcp-lab\build123d_mcp_no_worker_launcher.py
+```
+
+该入口绕过 `WorkerSession`，直接用 `Session` 实现同一批工具接口。测试结果：
+
+- `reset` 正常返回。
+- 简单 `execute("print(...)")` 正常返回。
+- `Box(40, 20, 3)`、`Cylinder(...)`、`show(...)` 正常。
+- 用代数布尔方式生成带孔板成功：
+
+```python
+from build123d import *
+
+box = Box(40, 20, 3)
+hole1 = Cylinder(radius=1.7, height=6).translate((-12, 0, 0))
+hole2 = Cylinder(radius=1.7, height=6).translate((12, 0, 0))
+plate2 = box - hole1 - hole2
+show(plate2, "datum_plate_m3_noworker")
+```
+
+结果：
+
+```text
+Registered 'datum_plate_m3_noworker': volume=2346 mm³, faces=8
+```
+
+`measure("datum_plate_m3_noworker")` 正常，关键结果：
+
+```json
+{
+  "volume": 2345.5248,
+  "topology": {"faces": 8, "edges": 18, "vertices": 12},
+  "bbox": {"xsize": 40.0, "ysize": 20.0, "zsize": 3.0},
+  "face_inventory": [
+    {"type": "Cylinder", "diameter": 3.4},
+    {"type": "Cylinder", "diameter": 3.4}
+  ]
+}
+```
+
+`export(...)` 成功：
+
+```text
+D:\cdxwork\build123d-mcp-lab\datum_plate_m3_noworker.step
+```
+
+这说明：
+
+- Codex MCP stdio 本身可以运行 `build123d-mcp` 工具。
+- `Session` 本体也可以在 Codex MCP 中运行。
+- 原始失败更集中在 `WorkerSession` / Windows `multiprocessing.spawn` 这一层。
+
+另外发现一个独立现象：
+
+```python
+with BuildPart() as plate_build:
+    Box(40, 20, 3)
+    with Locations((-12, 0, 0), (12, 0, 0)):
+        Cylinder(radius=1.7, height=6, mode=Mode.SUBTRACT)
+```
+
+该 builder-context 写法在无 worker MCP 入口中会卡在 `exec` 内部；但等价的代数布尔写法可以秒级完成。这个问题可能独立于 `WorkerSession`，后续可继续拆分。
