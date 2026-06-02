@@ -1,0 +1,172 @@
+"""Inspect STEP geometry with FreeCAD.
+
+Run with FreeCADCmd, not normal Python:
+
+    FreeCADCmd.exe tools/freecad/inspect_step.py input.step --json out.json
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import shlex
+import sys
+import traceback
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+import FreeCAD as App  # type: ignore
+import Part  # type: ignore
+
+
+def _round(value: float) -> float:
+    return round(float(value), 6)
+
+
+def _bbox_dict(bound_box: Any) -> dict[str, Any]:
+    return {
+        "x": [_round(bound_box.XMin), _round(bound_box.XMax)],
+        "y": [_round(bound_box.YMin), _round(bound_box.YMax)],
+        "z": [_round(bound_box.ZMin), _round(bound_box.ZMax)],
+        "dimensions": {
+            "x": _round(bound_box.XLength),
+            "y": _round(bound_box.YLength),
+            "z": _round(bound_box.ZLength),
+        },
+    }
+
+
+def _shape_metrics(shape: Any) -> dict[str, Any]:
+    return {
+        "bbox": _bbox_dict(shape.BoundBox),
+        "volume": _round(shape.Volume),
+        "area": _round(shape.Area),
+        "solids": len(shape.Solids),
+        "shells": len(shape.Shells),
+        "faces": len(shape.Faces),
+        "edges": len(shape.Edges),
+        "vertices": len(shape.Vertexes),
+        "is_null": bool(shape.isNull()),
+        "is_valid": bool(shape.isValid()),
+    }
+
+
+def inspect_step(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        raise FileNotFoundError(path)
+
+    shape = Part.Shape()
+    shape.read(str(path))
+
+    solids = []
+    for index, solid in enumerate(shape.Solids):
+        solids.append(
+            {
+                "index": index,
+                **_shape_metrics(solid),
+            }
+        )
+
+    return {
+        "tool": "freecad-inspect-step",
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "freecad_version": App.Version(),
+        "input": {
+            "path": str(path),
+            "size_bytes": path.stat().st_size,
+            "extension": path.suffix.lower(),
+            "contains_non_ascii_path": any(ord(ch) > 127 for ch in str(path)),
+        },
+        "shape": _shape_metrics(shape),
+        "solids": solids,
+    }
+
+
+def write_markdown(report: dict[str, Any], output: Path) -> None:
+    shape = report["shape"]
+    dims = shape["bbox"]["dimensions"]
+    lines = [
+        "# STEP Inspection Report",
+        "",
+        f"- Input: `{report['input']['path']}`",
+        f"- FreeCAD: `{report['freecad_version']}`",
+        f"- File size: `{report['input']['size_bytes']}` bytes",
+        f"- Non-ASCII path: `{report['input']['contains_non_ascii_path']}`",
+        "",
+        "## Overall Shape",
+        "",
+        f"- Solids: `{shape['solids']}`",
+        f"- Shells: `{shape['shells']}`",
+        f"- Faces: `{shape['faces']}`",
+        f"- Edges: `{shape['edges']}`",
+        f"- Vertices: `{shape['vertices']}`",
+        f"- Valid: `{shape['is_valid']}`",
+        f"- Volume: `{shape['volume']}` mm^3",
+        f"- Area: `{shape['area']}` mm^2",
+        f"- Bounding box: `{dims['x']} x {dims['y']} x {dims['z']}` mm",
+        "",
+        "## Solids",
+        "",
+        "| Index | Valid | BBox X | BBox Y | BBox Z | Volume | Faces | Edges |",
+        "| ---: | :---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+
+    for solid in report["solids"]:
+        solid_dims = solid["bbox"]["dimensions"]
+        lines.append(
+            "| {index} | {valid} | {x} | {y} | {z} | {volume} | {faces} | {edges} |".format(
+                index=solid["index"],
+                valid="yes" if solid["is_valid"] else "no",
+                x=solid_dims["x"],
+                y=solid_dims["y"],
+                z=solid_dims["z"],
+                volume=solid["volume"],
+                faces=solid["faces"],
+                edges=solid["edges"],
+            )
+        )
+
+    output.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def main(argv: list[str] | None = None) -> int:
+    if os.environ.get("FREECAD_INSPECT_DEBUG_ARGV") == "1":
+        print("sys.argv:", repr(sys.argv))
+        print("argv:", repr(argv))
+
+    if argv and len(argv) == 1 and (" --" in argv[0] or " -" in argv[0]):
+        argv = shlex.split(argv[0], posix=False)
+
+    parser = argparse.ArgumentParser(description="Inspect STEP/STP files with FreeCAD.")
+    parser.add_argument("input", help="STEP/STP file path")
+    parser.add_argument("--json", dest="json_output", help="Optional JSON output path")
+    parser.add_argument("--md", dest="md_output", help="Optional Markdown output path")
+    args = parser.parse_args(argv)
+
+    input_path = Path(args.input).expanduser().resolve()
+    report = inspect_step(input_path)
+
+    text = json.dumps(report, ensure_ascii=False, indent=2)
+    print(text)
+
+    if args.json_output:
+        json_path = Path(args.json_output).expanduser().resolve()
+        json_path.parent.mkdir(parents=True, exist_ok=True)
+        json_path.write_text(text + "\n", encoding="utf-8")
+
+    if args.md_output:
+        md_path = Path(args.md_output).expanduser().resolve()
+        md_path.parent.mkdir(parents=True, exist_ok=True)
+        write_markdown(report, md_path)
+
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main(sys.argv[1:]))
+    except Exception:
+        traceback.print_exc()
+        raise
