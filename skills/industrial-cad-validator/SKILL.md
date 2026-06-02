@@ -1,6 +1,6 @@
 ---
 name: industrial-cad-validator
-description: Validate industrial CAD STEP/STP files and assemblies with rules-based checks. Use when a user needs STEP inspection, part/solid count verification, bounding-box checks, geometry validity checks, feature-plane or direction checks, assembly regression gates, or a validation report for hardware CAD work.
+description: Validate industrial CAD STEP/STP files and assemblies with rules-based checks. Use when a user needs STEP inspection, part/solid count verification, bounding-box checks, geometry validity checks, feature-plane or direction checks, assembly regression gates, or a validation report for industrial CAD work.
 ---
 
 # Industrial CAD Validator
@@ -60,4 +60,3 @@ Report:
 - overall bbox;
 - rule status and failed checks;
 - whether the failure is likely a CAD issue, a wrong assumption, or a rule bug.
-

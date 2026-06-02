@@ -1,6 +1,6 @@
 # AI CAD Workflow Roadmap
 
-This repository is a public lab for industrial CAD agent workflows. The core direction is not a single CAD platform. The goal is to make agent-driven hardware design more reliable through STEP-first geometry, parametric source files, validation scripts, and reproducible review images.
+This repository is a public lab for industrial CAD agent workflows. The core direction is not a single CAD platform. The goal is to make agent-driven industrial product design more reliable through STEP-first geometry, parametric source files, validation scripts, and reproducible review images.
 
 ## Current focus
 
@@ -18,7 +18,7 @@ This repository is a public lab for industrial CAD agent workflows. The core dir
 ## Long-term direction
 
 - A higher-fidelity PC case workflow with compatibility checks for motherboard, GPU, PSU, CPU cooler, storage, and airflow.
-- Cooling-hardware and liquid-cooling infrastructure research as a longer-term engineering track.
+- Cooling equipment and liquid-cooling infrastructure research as a longer-term engineering track.
 - Public contributions to early AI + CAD tools when Windows, STEP, validation, or workflow issues are reproducible.
 
 ## Repository policy
@@ -26,4 +26,3 @@ This repository is a public lab for industrial CAD agent workflows. The core dir
 - Public documents and logs are English by default.
 - Chinese/raw notes are archived locally and are not committed.
 - Company CAD files, supplier drawings, API keys, and private engineering details are not committed.
-

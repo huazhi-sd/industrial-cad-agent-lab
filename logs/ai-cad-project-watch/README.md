@@ -1,6 +1,6 @@
 # AI CAD Project Watch Logs
 
-This directory records public dated notes about AI + CAD, CAD MCP, and agentic hardware-design workflows.
+This directory records public dated notes about AI + CAD, CAD MCP, and agentic industrial-design workflows.
 
 ## Rules
 
@@ -17,5 +17,4 @@ Priority areas:
 - CAD agents, text-to-CAD, prompt-to-CAD, and code-to-CAD workflows.
 - MCP servers for CAD tools, including FreeCAD, build123d, CadQuery, Onshape, KiCad, and similar systems.
 - AgentCAD, CAD skills, CAD viewers, STEP inspection, and validation tools.
-- Hardware-design workflows for PC cases, cooling hardware, electrical-product structures, and engineering drawing automation.
-
+- Industrial CAD workflows for PC cases, cooling equipment, electrical-product structures, and engineering drawing automation.

@@ -1,6 +1,6 @@
-# hardware-cad-agent-lab
+# industrial-cad-agent-lab
 
-Industrial CAD skills and experiments for hardware CAD agents.
+Industrial CAD skills and experiments for CAD agents.
 
 This repository starts from real structure-design work and small public CAD experiments. It is not tied to one CAD platform: current workflows use STEP, build123d/CadQuery-style scripts, CAD Viewer, AgentCAD, FreeCAD MCP experiments, kernelCAD experiments, and GitHub-based process notes.
 
@@ -79,6 +79,6 @@ For the current AI + industrial CAD workflow roadmap, see
 - CAD backend import/export, part listing, and assembly replacement helpers.
 - Plastic shell supplier simplification skill.
 - Rivet and screw inference skill for small appliance/electrical products.
-- PC hardware layout datums, including motherboard/GPU/case examples.
+- PC component layout datums, including motherboard/GPU/case examples.
 - PC cooling datum research, starting with a public 120mm case fan example.
 - FreeCAD and AgentCAD MCP comparison workflows.

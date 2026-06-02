@@ -1,6 +1,6 @@
 ---
 name: datum-research-before-cad
-description: Research standards, mechanical interfaces, coordinate conventions, and non-guessable dimensions before CAD generation. Use before modeling industrial hardware, PC components, sheet-metal parts, plastic shells, brackets, enclosures, connectors, or assemblies where standards, handedness, view direction, mounting datums, keepouts, or feature planes matter.
+description: Research standards, mechanical interfaces, coordinate conventions, and non-guessable dimensions before CAD generation. Use before modeling industrial components, PC components, sheet-metal parts, plastic shells, brackets, enclosures, connectors, or assemblies where standards, handedness, view direction, mounting datums, keepouts, or feature planes matter.
 ---
 
 # Datum Research Before CAD
@@ -56,7 +56,6 @@ Stop and ask the user before modeling if:
 ## Typical Targets
 
 - PC case components: mATX/ITX motherboard, GPU, PSU, SSD, cooler, fan, PCIe bracket.
-- Industrial electrical hardware: plastic shell, busbar, terminal cover, rivet, DIN-rail features.
+- Industrial electrical products: plastic shell, busbar, terminal cover, rivet, DIN-rail features.
 - Injection-molded parts: draft direction, wall thickness, ribs, posts, clips, assembly splits.
 - Sheet-metal and CNC datum parts: mounting holes, bends, keepouts, fastener planes.
-
