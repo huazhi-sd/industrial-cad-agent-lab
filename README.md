@@ -17,6 +17,8 @@ General CAD agents can call APIs, but they often lack manufacturing judgement. T
 
 | Skill | Path | Status |
 | --- | --- | --- |
+| Industrial CAD validation | `skills/industrial-cad-validator` | Draft, backed by FreeCAD STEP rules |
+| Datum research before CAD | `skills/datum-research-before-cad` | Draft, workflow skill |
 | Torsion spring generation | `skills/torsion-spring` | Draft, usable locally |
 | STEP left-view inspection | `skills/step-inspector` | Draft, validated on G1 meter layout |
 

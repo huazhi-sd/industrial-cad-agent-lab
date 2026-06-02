@@ -1,0 +1,4 @@
+interface:
+  display_name: "Industrial CAD Validator"
+  short_description: "Validate STEP assemblies with rules-based industrial CAD checks."
+  default_prompt: "Use industrial-cad-validator to inspect this STEP file and report part count, bounding boxes, validity, and rule failures."

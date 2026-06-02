@@ -1,0 +1,4 @@
+interface:
+  display_name: "Datum Research Before CAD"
+  short_description: "Research standards and define datums before CAD generation."
+  default_prompt: "Use datum-research-before-cad to research standards, define view conventions, and create a datum plan before modeling."
