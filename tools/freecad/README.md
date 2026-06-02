@@ -36,6 +36,23 @@ Use it as a validation gate:
 
 The command exits with code `0` when all requested validation checks pass and `2` when any check fails.
 
+Use a project rules file:
+
+```powershell
+& "D:\Program Files\FreeCAD 1.1\bin\python.exe" `
+  "<repo>\tools\freecad\inspect_step.py" `
+  "<repo>\examples\pc-cooling\matx-motherboard-gpu-datum\motherboard_tray_board_gpu_v1.step" `
+  --rules "<repo>\examples\pc-cooling\matx-motherboard-gpu-datum\motherboard_tray_board_gpu_v1.rules.json"
+```
+
+Supported rule types:
+
+- `solid_count`
+- `bbox_dimensions`
+- `bbox_dimension_range`
+- `bbox_edge_relation`
+- `validity`
+
 Why bundled Python instead of `FreeCADCmd.exe`: on this Windows workstation, `FreeCADCmd.exe` did not reliably execute scripts from a path containing non-ASCII characters. FreeCAD's bundled `python.exe` imported `FreeCAD` and `Part` cleanly and produced stable output.
 
 This is intentionally a local prototype. If the workflow proves stable, it can be used as the basis for a future `freecad-mcp` contribution such as `import_step` or `list_solids_with_bbox`.

@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "description": "Validation rules for the three-part mATX tray, motherboard, and GPU datum assembly.",
+  "checks": [
+    {
+      "name": "assembly_has_three_top_level_solids",
+      "type": "solid_count",
+      "expected": 3
+    },
+    {
+      "name": "overall_bbox",
+      "type": "bbox_dimensions",
+      "target": "shape",
+      "expected": {
+        "x": 342.5,
+        "y": 154.45,
+        "z": 253.84
+      },
+      "tolerance": 1.0
+    },
+    {
+      "name": "all_geometry_valid",
+      "type": "validity",
+      "target": "all_solids"
+    },
+    {
+      "name": "tray_bbox",
+      "type": "bbox_dimensions",
+      "target": {
+        "solid": 0
+      },
+      "expected": {
+        "x": 253.84,
+        "y": 7.85,
+        "z": 253.84
+      },
+      "tolerance": 0.5
+    },
+    {
+      "name": "motherboard_bbox",
+      "type": "bbox_dimensions",
+      "target": {
+        "solid": 1
+      },
+      "expected": {
+        "x": 243.84,
+        "z": 243.84
+      },
+      "tolerance": 0.5
+    },
+    {
+      "name": "gpu_envelope_x",
+      "type": "bbox_dimension_range",
+      "target": {
+        "solid": 2
+      },
+      "axis": "x",
+      "min": 335.0,
+      "tolerance": 0.5
+    },
+    {
+      "name": "gpu_envelope_y",
+      "type": "bbox_dimension_range",
+      "target": {
+        "solid": 2
+      },
+      "axis": "y",
+      "min": 145.0,
+      "tolerance": 0.5
+    },
+    {
+      "name": "gpu_three_slot_span_z",
+      "type": "bbox_dimension_range",
+      "target": {
+        "solid": 2
+      },
+      "axis": "z",
+      "min": 70.0,
+      "max": 75.0,
+      "tolerance": 1.0
+    },
+    {
+      "name": "tray_is_behind_motherboard",
+      "type": "bbox_edge_relation",
+      "a": {
+        "solid": 0
+      },
+      "a_edge": "y_max",
+      "op": ">",
+      "b": {
+        "solid": 1
+      },
+      "b_edge": "y_max",
+      "tolerance": 0.1
+    },
+    {
+      "name": "gpu_is_in_front_of_tray",
+      "type": "bbox_edge_relation",
+      "a": {
+        "solid": 2
+      },
+      "a_edge": "y_min",
+      "op": "<",
+      "b": {
+        "solid": 0
+      },
+      "b_edge": "y_min",
+      "tolerance": 0.1
+    }
+  ]
+}

@@ -57,57 +57,227 @@ def _check_close(actual: float, expected: float, tolerance: float) -> bool:
     return abs(actual - expected) <= tolerance
 
 
-def _validation_result(
-    report: dict[str, Any],
+def _target_metrics(report: dict[str, Any], target: Any) -> dict[str, Any]:
+    if target in (None, "shape", "overall"):
+        return report["shape"]
+    if target in ("all", "all_solids"):
+        raise ValueError("Target all_solids is only valid for validity checks")
+    if isinstance(target, dict) and "solid" in target:
+        index = int(target["solid"])
+        try:
+            return report["solids"][index]
+        except IndexError as exc:
+            raise ValueError(f"Solid index out of range: {index}") from exc
+    raise ValueError(f"Unsupported target: {target!r}")
+
+
+def _bbox_dimension(metrics: dict[str, Any], axis: str) -> float:
+    axis = axis.lower()
+    if axis not in ("x", "y", "z"):
+        raise ValueError(f"Unsupported bbox dimension axis: {axis}")
+    return float(metrics["bbox"]["dimensions"][axis])
+
+
+def _bbox_edge(metrics: dict[str, Any], edge: str) -> float:
+    aliases = {
+        "xmin": "x_min",
+        "xmax": "x_max",
+        "ymin": "y_min",
+        "ymax": "y_max",
+        "zmin": "z_min",
+        "zmax": "z_max",
+    }
+    edge = aliases.get(edge.lower(), edge.lower())
+    if edge not in ("x_min", "x_max", "y_min", "y_max", "z_min", "z_max"):
+        raise ValueError(f"Unsupported bbox edge: {edge}")
+    axis, side = edge.split("_")
+    values = metrics["bbox"][axis]
+    return float(values[0] if side == "min" else values[1])
+
+
+def _normalise_expected_bbox(value: Any) -> dict[str, float]:
+    if isinstance(value, list):
+        if len(value) != 3:
+            raise ValueError("BBox list must contain exactly 3 values")
+        return {"x": float(value[0]), "y": float(value[1]), "z": float(value[2])}
+    if isinstance(value, dict):
+        return {axis: float(value[axis]) for axis in ("x", "y", "z") if axis in value}
+    raise ValueError("Expected bbox must be a list or object")
+
+
+def _compare(actual: float, op: str, expected: float, tolerance: float) -> bool:
+    if op == "==":
+        return _check_close(actual, expected, tolerance)
+    if op == "!=":
+        return not _check_close(actual, expected, tolerance)
+    if op == ">":
+        return actual > expected - tolerance
+    if op == ">=":
+        return actual >= expected - tolerance
+    if op == "<":
+        return actual < expected + tolerance
+    if op == "<=":
+        return actual <= expected + tolerance
+    raise ValueError(f"Unsupported comparison operator: {op}")
+
+
+def _check_rule(report: dict[str, Any], rule: dict[str, Any]) -> list[dict[str, Any]]:
+    rule_type = rule["type"]
+    name = rule.get("name", rule_type)
+    tolerance = float(rule.get("tolerance", rule.get("tol", 0.05)))
+
+    if rule_type == "solid_count":
+        actual = int(report["shape"]["solids"])
+        expected = int(rule["expected"])
+        return [
+            {
+                "name": name,
+                "type": rule_type,
+                "status": "pass" if actual == expected else "fail",
+                "expected": expected,
+                "actual": actual,
+            }
+        ]
+
+    if rule_type == "bbox_dimensions":
+        metrics = _target_metrics(report, rule.get("target"))
+        expected_bbox = _normalise_expected_bbox(rule["expected"])
+        checks = []
+        for axis, expected in expected_bbox.items():
+            actual = _bbox_dimension(metrics, axis)
+            checks.append(
+                {
+                    "name": f"{name}_{axis}",
+                    "type": rule_type,
+                    "status": "pass" if _check_close(actual, expected, tolerance) else "fail",
+                    "expected": expected,
+                    "actual": actual,
+                    "tolerance": tolerance,
+                }
+            )
+        return checks
+
+    if rule_type == "bbox_dimension_range":
+        metrics = _target_metrics(report, rule.get("target"))
+        axis = rule["axis"]
+        actual = _bbox_dimension(metrics, axis)
+        checks = []
+        if "min" in rule:
+            expected = float(rule["min"])
+            checks.append(
+                {
+                    "name": f"{name}_{axis}_min",
+                    "type": rule_type,
+                    "status": "pass" if actual >= expected - tolerance else "fail",
+                    "expected": f">= {expected}",
+                    "actual": actual,
+                    "tolerance": tolerance,
+                }
+            )
+        if "max" in rule:
+            expected = float(rule["max"])
+            checks.append(
+                {
+                    "name": f"{name}_{axis}_max",
+                    "type": rule_type,
+                    "status": "pass" if actual <= expected + tolerance else "fail",
+                    "expected": f"<= {expected}",
+                    "actual": actual,
+                    "tolerance": tolerance,
+                }
+            )
+        return checks
+
+    if rule_type == "bbox_edge_relation":
+        a_metrics = _target_metrics(report, rule["a"])
+        b_metrics = _target_metrics(report, rule["b"])
+        a_value = _bbox_edge(a_metrics, rule["a_edge"])
+        b_value = _bbox_edge(b_metrics, rule["b_edge"])
+        op = rule.get("op", ">=")
+        return [
+            {
+                "name": name,
+                "type": rule_type,
+                "status": "pass" if _compare(a_value, op, b_value, tolerance) else "fail",
+                "expected": f"{rule['a_edge']} {op} {rule['b_edge']} ({b_value})",
+                "actual": a_value,
+                "tolerance": tolerance,
+            }
+        ]
+
+    if rule_type == "validity":
+        target = rule.get("target", "shape")
+        checks = []
+        if target in ("all", "all_solids"):
+            items = [("shape", report["shape"])] + [
+                (f"solid_{solid['index']}", solid) for solid in report["solids"]
+            ]
+        else:
+            items = [(name, _target_metrics(report, target))]
+        for item_name, metrics in items:
+            checks.append(
+                {
+                    "name": item_name if item_name == name else f"{name}_{item_name}",
+                    "type": rule_type,
+                    "status": "pass" if metrics["is_valid"] else "fail",
+                    "expected": True,
+                    "actual": bool(metrics["is_valid"]),
+                }
+            )
+        return checks
+
+    raise ValueError(f"Unsupported rule type: {rule_type}")
+
+
+def _rules_from_cli(
     expect_solids: int | None,
     expect_bbox: list[float] | None,
     bbox_tolerance: float,
     fail_on_invalid: bool,
+) -> list[dict[str, Any]]:
+    rules = []
+    if expect_solids is not None:
+        rules.append({"type": "solid_count", "name": "solid_count", "expected": expect_solids})
+    if expect_bbox is not None:
+        rules.append(
+            {
+                "type": "bbox_dimensions",
+                "name": "overall_bbox",
+                "target": "shape",
+                "expected": expect_bbox,
+                "tolerance": bbox_tolerance,
+            }
+        )
+    if fail_on_invalid:
+        rules.append({"type": "validity", "name": "validity", "target": "all_solids"})
+    return rules
+
+
+def _load_rules(path: Path) -> list[dict[str, Any]]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(data, list):
+        return data
+    if isinstance(data, dict) and isinstance(data.get("checks"), list):
+        return data["checks"]
+    raise ValueError("Rules file must be a list or an object with a checks list")
+
+
+def _validation_result(
+    report: dict[str, Any],
+    rules: list[dict[str, Any]],
 ) -> dict[str, Any]:
     checks: list[dict[str, Any]] = []
-    shape = report["shape"]
-
-    if expect_solids is not None:
-        actual = int(shape["solids"])
-        checks.append(
-            {
-                "name": "solid_count",
-                "status": "pass" if actual == expect_solids else "fail",
-                "expected": expect_solids,
-                "actual": actual,
-            }
-        )
-
-    if expect_bbox is not None:
-        dims = shape["bbox"]["dimensions"]
-        actual_dims = [float(dims["x"]), float(dims["y"]), float(dims["z"])]
-        for axis, actual, expected in zip(["x", "y", "z"], actual_dims, expect_bbox):
+    for rule in rules:
+        try:
+            checks.extend(_check_rule(report, rule))
+        except Exception as exc:
             checks.append(
                 {
-                    "name": f"bbox_{axis}",
-                    "status": "pass" if _check_close(actual, expected, bbox_tolerance) else "fail",
-                    "expected": expected,
-                    "actual": actual,
-                    "tolerance": bbox_tolerance,
-                }
-            )
-
-    if fail_on_invalid:
-        checks.append(
-            {
-                "name": "shape_validity",
-                "status": "pass" if shape["is_valid"] else "fail",
-                "expected": True,
-                "actual": bool(shape["is_valid"]),
-            }
-        )
-        for solid in report["solids"]:
-            checks.append(
-                {
-                    "name": f"solid_{solid['index']}_validity",
-                    "status": "pass" if solid["is_valid"] else "fail",
-                    "expected": True,
-                    "actual": bool(solid["is_valid"]),
+                    "name": rule.get("name", rule.get("type", "rule_error")),
+                    "type": rule.get("type", "unknown"),
+                    "status": "fail",
+                    "expected": "valid rule",
+                    "actual": str(exc),
                 }
             )
 
@@ -240,6 +410,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("input", help="STEP/STP file path")
     parser.add_argument("--json", dest="json_output", help="Optional JSON output path")
     parser.add_argument("--md", dest="md_output", help="Optional Markdown output path")
+    parser.add_argument("--rules", help="Optional JSON rules file for validation checks")
     parser.add_argument("--expect-solids", type=int, help="Fail if the STEP solid count differs")
     parser.add_argument(
         "--expect-bbox",
@@ -254,13 +425,19 @@ def main(argv: list[str] | None = None) -> int:
 
     input_path = Path(args.input).expanduser().resolve()
     report = inspect_step(input_path)
-    report["validation"] = _validation_result(
-        report=report,
-        expect_solids=args.expect_solids,
-        expect_bbox=args.expect_bbox,
-        bbox_tolerance=args.bbox_tol,
-        fail_on_invalid=args.fail_on_invalid,
+    rules = []
+    if args.rules:
+        rules_path = Path(args.rules).expanduser().resolve()
+        rules.extend(_load_rules(rules_path))
+    rules.extend(
+        _rules_from_cli(
+            expect_solids=args.expect_solids,
+            expect_bbox=args.expect_bbox,
+            bbox_tolerance=args.bbox_tol,
+            fail_on_invalid=args.fail_on_invalid,
+        )
     )
+    report["validation"] = _validation_result(report=report, rules=rules)
 
     text = json.dumps(report, ensure_ascii=False, indent=2)
     print(text)

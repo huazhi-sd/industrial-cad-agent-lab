@@ -17,6 +17,7 @@ The current STEP is intentionally kept as 3 top-level solids. Helper details suc
 | `motherboard_datum_v1.py` | mATX motherboard datum source |
 | `gpu_3slot_datum_v1.py` | 3-slot GPU datum source |
 | `motherboard_tray_board_gpu_v1.py` | Assembly source |
+| `motherboard_tray_board_gpu_v1.rules.json` | FreeCAD STEP inspection rules |
 | `validate_handedness.py` | Orientation and handedness checks |
 | `validate_motherboard_tray_board_gpu_v1.py` | Assembly, GPU bracket, and goldfinger checks |
 | `VIEW_CONVENTIONS.md` | Coordinate and view contract |
@@ -71,6 +72,10 @@ From this directory:
 python .\validate_handedness.py
 python .\validate_motherboard_tray_board_gpu_v1.py
 python C:\Users\cokewithice\.codex\skills\cad\scripts\step --force .\motherboard_tray_board_gpu_v1.py
+& "D:\Program Files\FreeCAD 1.1\bin\python.exe" `
+  ..\..\..\tools\freecad\inspect_step.py `
+  .\motherboard_tray_board_gpu_v1.step `
+  --rules .\motherboard_tray_board_gpu_v1.rules.json
 ```
 
 Render a review image:
@@ -99,4 +104,3 @@ The procedural rule from this case:
 When a user corrects a principle, turn it into a written and executable gate
 before continuing geometry work.
 ```
-
