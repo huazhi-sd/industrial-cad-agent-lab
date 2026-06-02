@@ -1,37 +1,37 @@
 # mATX motherboard tray + board + 3-slot GPU datum
 
-这是一个公开的 AI + CAD 协作样例，目标不是复刻某一块真实主板或显卡，而是建立一个可用于小型 mATX 机箱布局的三件基准装配：
+This is a public AI + CAD collaboration example. It does not try to copy a specific commercial motherboard or GPU. Its purpose is to define a usable three-part datum assembly for compact mATX case layout work:
 
-1. motherboard tray / 主板支架
-2. mATX motherboard datum / 主板基准件
-3. 3-slot GPU datum / 三槽显卡基准件
+1. motherboard tray
+2. mATX motherboard datum
+3. 3-slot GPU datum
 
-当前 STEP 保持为 3 个顶层实体，避免把螺丝柱、接口、金手指、背板等辅助特征散成大量小零件。
+The current STEP is intentionally kept as 3 top-level solids. Helper details such as standoffs, connectors, PCIe goldfinger cues, backplate cues, and bracket pockets are integrated into those three meaningful parts instead of being exported as many small loose solids.
 
 ## Current output
 
 | File | Purpose |
 | --- | --- |
-| `motherboard_tray_board_gpu_v1.step` | 当前三件装配 STEP |
-| `motherboard_tray_v1.py` | 主板支架源文件 |
-| `motherboard_datum_v1.py` | mATX 主板基准件源文件 |
-| `gpu_3slot_datum_v1.py` | 三槽显卡基准件源文件 |
-| `motherboard_tray_board_gpu_v1.py` | 三件装配源文件 |
-| `validate_handedness.py` | 方向/手性检查 |
-| `validate_motherboard_tray_board_gpu_v1.py` | 装配、显卡、挡板、金手指检查 |
-| `VIEW_CONVENTIONS.md` | 坐标和视图契约 |
-| `MOTHERBOARD_LAYOUT_DATUMS.md` | 主板布局基准 |
-| `GPU_3SLOT_DATUM_V1.md` | 三槽显卡基准说明 |
-| `motherboard_tray_board_gpu_v1_front_20260602T045059Z.png` | 当前主视图 |
-| `motherboard_tray_board_gpu_v1_side_20260602T045059Z.png` | 当前侧视图 |
-| `motherboard_tray_board_gpu_v1_iso_20260602T045059Z.png` | 当前等轴图 |
+| `motherboard_tray_board_gpu_v1.step` | Current three-part assembly STEP |
+| `motherboard_tray_v1.py` | Motherboard tray source |
+| `motherboard_datum_v1.py` | mATX motherboard datum source |
+| `gpu_3slot_datum_v1.py` | 3-slot GPU datum source |
+| `motherboard_tray_board_gpu_v1.py` | Assembly source |
+| `validate_handedness.py` | Orientation and handedness checks |
+| `validate_motherboard_tray_board_gpu_v1.py` | Assembly, GPU bracket, and goldfinger checks |
+| `VIEW_CONVENTIONS.md` | Coordinate and view contract |
+| `MOTHERBOARD_LAYOUT_DATUMS.md` | Motherboard layout datum notes |
+| `GPU_3SLOT_DATUM_V1.md` | 3-slot GPU datum notes |
+| `motherboard_tray_board_gpu_v1_front_20260602T045059Z.png` | Current front review image |
+| `motherboard_tray_board_gpu_v1_side_20260602T045059Z.png` | Current side review image |
+| `motherboard_tray_board_gpu_v1_iso_20260602T045059Z.png` | Current isometric review image |
 
-旧版 `matx_tray_board_gpu_final_3part.*` 是 2026-06-01 的早期单文件成果，保留作过程对照；新工作应优先看 `*_v1` 文件。
+The older `matx_tray_board_gpu_final_3part.*` files are retained as a process checkpoint from 2026-06-01. New work should prefer the `*_v1` files.
 
 ## Geometry contract
 
 - Units: mm.
-- Raw CAD `front` = motherboard component side / 主板元件面。
+- Raw CAD `front` = motherboard component side.
 - Rear I/O is left / low X.
 - 24-pin ATX is right / high X.
 - PCIe x16 and GPU are in the lower area / low Z.
@@ -61,7 +61,7 @@ In this model:
 - Screw pocket plane offset from motherboard front surface: about `117.51 mm`
 - PCIe x16 goldfinger datum: `89.9 x 12.06 mm`
 
-This matters because the three screw pockets drive the future case rear PCIe fixing geometry.
+These bracket pockets drive the future case rear PCIe fixing geometry.
 
 ## Regenerate
 
@@ -73,7 +73,7 @@ python .\validate_motherboard_tray_board_gpu_v1.py
 python C:\Users\cokewithice\.codex\skills\cad\scripts\step --force .\motherboard_tray_board_gpu_v1.py
 ```
 
-Render review images:
+Render a review image:
 
 ```powershell
 python C:\Users\cokewithice\.codex\skills\cad\scripts\snapshot `

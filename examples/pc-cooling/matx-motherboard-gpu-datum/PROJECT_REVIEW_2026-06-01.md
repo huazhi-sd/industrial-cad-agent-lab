@@ -96,7 +96,7 @@ The repeated failure was not only a "view" problem. It was a process-control fai
 - I lacked a regression checklist.
   - After fixing one item, I did not automatically check the user-emphasized constraints again.
 - I treated the user's correction as local feedback, not as a global rule.
-  - "先统一正面" should have become a project gate immediately.
+  - "Unify the front view first" should have become a project gate immediately.
 
 ### How to reduce repeats next time
 
@@ -165,4 +165,3 @@ In this project, the gate should have been added after the second handedness err
 - GPU goldfinger is present and aligned as a mating datum, but still simplified.
 - Motherboard mounting-hole standard and visible-board-hole styling are separated imperfectly.
 - The model is a datum/fit assembly, not a manufacturable motherboard or chassis yet.
-

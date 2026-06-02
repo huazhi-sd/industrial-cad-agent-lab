@@ -1,8 +1,8 @@
 # hardware-cad-agent-lab
 
-Chinese manufacturing CAD skills and experiments for hardware CAD agents.
+Industrial CAD skills and experiments for hardware CAD agents.
 
-This repository starts from real structure-design work and small public CAD experiments. It is not tied to one CAD platform: current workflows use STEP, build123d/CadQuery-style scripts, CAD Viewer, AgentCAD, FreeCAD/Onshape MCP experiments, and GitHub-based process notes.
+This repository starts from real structure-design work and small public CAD experiments. It is not tied to one CAD platform: current workflows use STEP, build123d/CadQuery-style scripts, CAD Viewer, AgentCAD, FreeCAD MCP experiments, kernelCAD experiments, and GitHub-based process notes.
 
 ## Why this repo exists
 
@@ -19,7 +19,6 @@ General CAD agents can call APIs, but they often lack manufacturing judgement. T
 | --- | --- | --- |
 | Torsion spring generation | `skills/torsion-spring` | Draft, usable locally |
 | STEP left-view inspection | `skills/step-inspector` | Draft, validated on G1 meter layout |
-| Onshape REST API client | `skills/onshape-client` | Draft, kept as one optional CAD backend |
 
 ## Quick start
 
@@ -56,23 +55,16 @@ python .\skills\step-inspector\scripts\render_left_view.py `
   --tolerance 1.0
 ```
 
-For detailed local setup, see `docs/environment-setup.zh-CN.md`.
+For detailed local setup, see `docs/environment-setup.md`.
 
-Parse an Onshape document URL and prepare API operations:
-
-```powershell
-python .\skills\onshape-client\scripts\onshape_client.py parse-url `
-  "https://cad.onshape.com/documents/<did>/w/<wid>/e/<eid>"
-```
-
-After setting `ONSHAPE_ACCESS_KEY` and `ONSHAPE_SECRET_KEY`, the same script can list elements, list parts, import a CAD file, and export a Part Studio STEP.
-
-For the current AI + industrial 3D learning roadmap, see
-`docs/ai-industrial-3d-learning-2026-05-29.zh-CN.md`.
+For the current AI + industrial CAD workflow roadmap, see
+`docs/ai-cad-workflow-roadmap.md`.
 
 ## Repository rules
 
 - Do not commit Onshape API keys, secrets, customer files, or private supplier drawings.
+- Public repository content is English by default.
+- Chinese/raw working notes stay in a local private archive and are not committed.
 - Put reusable knowledge into `skills/*/SKILL.md`.
 - Put deterministic CAD generation code into `skills/*/scripts`.
 - Put detailed API workflows into `skills/*/references`.
@@ -82,7 +74,7 @@ For the current AI + industrial 3D learning roadmap, see
 
 - Torsion spring fitting against an imported original STEP.
 - STEP inspection views that match an engineer's CAD view cube.
-- Onshape upload, import/export, element/part listing, and assembly replacement helper.
+- CAD backend import/export, part listing, and assembly replacement helpers.
 - Plastic shell supplier simplification skill.
 - Rivet and screw inference skill for small appliance/electrical products.
 - PC hardware layout datums, including motherboard/GPU/case examples.

@@ -9,6 +9,12 @@ build/
 *.secret
 onshape_keys.*
 
+# Public repository language policy.
+*.zh-CN.md
+private-notes/
+local-notes/
+zh-CN-archive/
+
 # Large/private CAD files should be added deliberately after sanitizing.
 *.prt
 *.asm
