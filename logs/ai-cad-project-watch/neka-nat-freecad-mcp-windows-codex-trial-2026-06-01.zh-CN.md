@@ -111,3 +111,119 @@ D:\cdxwork\mcp-lab\freecad_neka_nat_trial_plate_iso.png
 - 重启 Codex 后需要再次验证新工具 schema。
 - FreeCAD 插件需要 FreeCAD GUI 启动，纯 headless 稳定性还未验证。
 - 后续要测试复杂装配、STEP 导入、对象命名、标准视图截图、工程图输出。
+
+## 2026-06-02 复测
+
+Codex 重启后，`mcp__freecad` 已切换为 `neka-nat/freecad-mcp` 的工具 schema。
+
+新工具包括：
+
+- `create_document`
+- `list_documents`
+- `create_object`
+- `edit_object`
+- `get_object`
+- `get_objects`
+- `delete_object`
+- `execute_code`
+- `get_view`
+- `insert_part_from_library`
+- `get_parts_list`
+
+复测结论：
+
+- `list_documents` 成功。
+- `create_document` 成功。
+- `execute_code` 成功创建 40 x 20 x 3 mm 双孔板。
+- STEP 导出成功：
+
+```text
+D:\cdxwork\mcp-lab\freecad_mcp_trial_0602_plate.step
+```
+
+几何数据：
+
+- bbox：40.0 x 20.0 x 3.0 mm
+- volume：2345.5248 mm^3
+- faces：8
+- edges：18
+
+`get_objects` 可以返回对象结构、bbox、体积、面积、面数、边数和颜色信息。
+
+`get_view` 可以返回指定标准视图截图。
+
+## STEP 导入测试
+
+测试对象：
+
+```text
+D:\cdxwork\26-0507-出图\matx-case\matx_tray_board_gpu_final_3part.step
+```
+
+### 成功路线
+
+使用 `Part.Shape().read(step_path)` 可以稳定导入已有 STEP。
+
+结果：
+
+- object_count：1
+- bbox：340.0 x 154.1 x 253.84 mm
+- volume：3840807.731 mm^3
+- faces：160
+- edges：373
+- solids：3
+
+输出 FreeCAD 文件：
+
+```text
+D:\cdxwork\mcp-lab\freecad_mcp_import_matx_shape_read_0602.FCStd
+```
+
+局限：
+
+- 这种方式把 STEP 读成一个 `Part::Feature`。
+- 可以保留多个 solid，但会丢失原始零件层级/对象命名。
+
+### 失败/阻塞路线
+
+`ImportGui.insert(step_path, doc_name)` 在 MCP `execute_code` 中失败：
+
+```text
+NameError: Unknown document 'codex_freecad_import_matx_0602'
+```
+
+改用 `doc.Name` 后仍失败。
+
+`Import.open(step_path)` 在同步 MCP 调用中超过 120 秒超时。
+
+推测：
+
+- `Import.open` 更接近完整 STEP 装配导入，可能保留更多结构。
+- 但对较复杂 STEP 而言，同步 MCP 调用容易卡住。
+- 后续要测试 `execute_code_async` 或 FreeCAD GUI 侧导入后由 MCP 读取对象。
+
+`saveImage()` 也出现 120 秒超时，可能与前一次重导入/GUI 线程状态有关。
+
+## 对我们的意义
+
+`neka-nat/freecad-mcp` 在本机已经具备基本可用性：
+
+- 适合执行 FreeCAD Python。
+- 适合从已有 STEP 提取几何数据。
+- 适合把简单模型导出成 STEP。
+- 适合返回对象结构和标准视图截图。
+
+目前不建议把它作为唯一主建模路径。
+
+更合理的定位：
+
+- `build123d-mcp`：参数化建模、快速几何验证。
+- `FreeCAD MCP`：读取/检查 STEP、FreeCAD 原生操作、后续工程图/GUI 生态。
+- CAD skill / text-to-cad：沉淀可复用 workflow 和公开案例。
+
+需要继续研究的问题：
+
+- 如何稳定导入 STEP 装配并保留零件层级。
+- 如何避免 GUI 线程同步超时。
+- 如何把 FreeCAD 标准视图截图保存为本地文件，而不是只作为 MCP image 返回。
+- 是否可以对 FreeCAD MCP 增加 `import_step`、`export_step`、`save_view_png` 等更工业化的封装工具。
