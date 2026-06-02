@@ -1,8 +1,8 @@
 """Inspect STEP geometry with FreeCAD.
 
-Run with FreeCADCmd, not normal Python:
+Run with FreeCAD's bundled Python or FreeCADCmd:
 
-    FreeCADCmd.exe tools/freecad/inspect_step.py input.step --json out.json
+    python.exe tools/freecad/inspect_step.py input.step --json out.json
 """
 
 from __future__ import annotations
@@ -53,6 +53,73 @@ def _shape_metrics(shape: Any) -> dict[str, Any]:
     }
 
 
+def _check_close(actual: float, expected: float, tolerance: float) -> bool:
+    return abs(actual - expected) <= tolerance
+
+
+def _validation_result(
+    report: dict[str, Any],
+    expect_solids: int | None,
+    expect_bbox: list[float] | None,
+    bbox_tolerance: float,
+    fail_on_invalid: bool,
+) -> dict[str, Any]:
+    checks: list[dict[str, Any]] = []
+    shape = report["shape"]
+
+    if expect_solids is not None:
+        actual = int(shape["solids"])
+        checks.append(
+            {
+                "name": "solid_count",
+                "status": "pass" if actual == expect_solids else "fail",
+                "expected": expect_solids,
+                "actual": actual,
+            }
+        )
+
+    if expect_bbox is not None:
+        dims = shape["bbox"]["dimensions"]
+        actual_dims = [float(dims["x"]), float(dims["y"]), float(dims["z"])]
+        for axis, actual, expected in zip(["x", "y", "z"], actual_dims, expect_bbox):
+            checks.append(
+                {
+                    "name": f"bbox_{axis}",
+                    "status": "pass" if _check_close(actual, expected, bbox_tolerance) else "fail",
+                    "expected": expected,
+                    "actual": actual,
+                    "tolerance": bbox_tolerance,
+                }
+            )
+
+    if fail_on_invalid:
+        checks.append(
+            {
+                "name": "shape_validity",
+                "status": "pass" if shape["is_valid"] else "fail",
+                "expected": True,
+                "actual": bool(shape["is_valid"]),
+            }
+        )
+        for solid in report["solids"]:
+            checks.append(
+                {
+                    "name": f"solid_{solid['index']}_validity",
+                    "status": "pass" if solid["is_valid"] else "fail",
+                    "expected": True,
+                    "actual": bool(solid["is_valid"]),
+                }
+            )
+
+    failed = [check for check in checks if check["status"] != "pass"]
+    return {
+        "status": "pass" if not failed else "fail",
+        "check_count": len(checks),
+        "failed_count": len(failed),
+        "checks": checks,
+    }
+
+
 def inspect_step(path: Path) -> dict[str, Any]:
     if not path.exists():
         raise FileNotFoundError(path)
@@ -87,6 +154,7 @@ def inspect_step(path: Path) -> dict[str, Any]:
 def write_markdown(report: dict[str, Any], output: Path) -> None:
     shape = report["shape"]
     dims = shape["bbox"]["dimensions"]
+    validation = report.get("validation")
     lines = [
         "# STEP Inspection Report",
         "",
@@ -107,11 +175,40 @@ def write_markdown(report: dict[str, Any], output: Path) -> None:
         f"- Area: `{shape['area']}` mm^2",
         f"- Bounding box: `{dims['x']} x {dims['y']} x {dims['z']}` mm",
         "",
+    ]
+
+    if validation:
+        lines.extend(
+            [
+                "## Validation",
+                "",
+                f"- Status: `{validation['status']}`",
+                f"- Checks: `{validation['check_count']}`",
+                f"- Failed: `{validation['failed_count']}`",
+                "",
+                "| Check | Status | Expected | Actual |",
+                "| --- | :---: | ---: | ---: |",
+            ]
+        )
+        for check in validation["checks"]:
+            lines.append(
+                "| {name} | {status} | {expected} | {actual} |".format(
+                    name=check["name"],
+                    status=check["status"],
+                    expected=check["expected"],
+                    actual=check["actual"],
+                )
+            )
+        lines.append("")
+
+    lines.extend(
+        [
         "## Solids",
         "",
         "| Index | Valid | BBox X | BBox Y | BBox Z | Volume | Faces | Edges |",
         "| ---: | :---: | ---: | ---: | ---: | ---: | ---: | ---: |",
-    ]
+        ]
+    )
 
     for solid in report["solids"]:
         solid_dims = solid["bbox"]["dimensions"]
@@ -143,10 +240,27 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("input", help="STEP/STP file path")
     parser.add_argument("--json", dest="json_output", help="Optional JSON output path")
     parser.add_argument("--md", dest="md_output", help="Optional Markdown output path")
+    parser.add_argument("--expect-solids", type=int, help="Fail if the STEP solid count differs")
+    parser.add_argument(
+        "--expect-bbox",
+        nargs=3,
+        type=float,
+        metavar=("X", "Y", "Z"),
+        help="Expected overall bounding-box dimensions in mm",
+    )
+    parser.add_argument("--bbox-tol", type=float, default=0.05, help="Bounding-box tolerance in mm")
+    parser.add_argument("--fail-on-invalid", action="store_true", help="Fail if the shape or any solid is invalid")
     args = parser.parse_args(argv)
 
     input_path = Path(args.input).expanduser().resolve()
     report = inspect_step(input_path)
+    report["validation"] = _validation_result(
+        report=report,
+        expect_solids=args.expect_solids,
+        expect_bbox=args.expect_bbox,
+        bbox_tolerance=args.bbox_tol,
+        fail_on_invalid=args.fail_on_invalid,
+    )
 
     text = json.dumps(report, ensure_ascii=False, indent=2)
     print(text)
@@ -161,7 +275,7 @@ def main(argv: list[str] | None = None) -> int:
         md_path.parent.mkdir(parents=True, exist_ok=True)
         write_markdown(report, md_path)
 
-    return 0
+    return 0 if report["validation"]["status"] == "pass" else 2
 
 
 if __name__ == "__main__":
