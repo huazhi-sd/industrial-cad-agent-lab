@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "description": "Seed validation rules for a simplified 120mm PC case fan datum. These rules assume X/Z are the square frame axes and Y is thickness.",
+  "checks": [
+    {
+      "name": "single_fan_body",
+      "type": "solid_count",
+      "expected": 1
+    },
+    {
+      "name": "fan_120mm_bbox",
+      "type": "bbox_dimensions",
+      "target": "shape",
+      "expected": {
+        "x": 120.0,
+        "y": 25.0,
+        "z": 120.0
+      },
+      "tolerance": 0.5
+    },
+    {
+      "name": "fan_geometry_valid",
+      "type": "validity",
+      "target": "all_solids"
+    }
+  ]
+}

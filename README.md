@@ -80,4 +80,5 @@ For the current AI + industrial CAD workflow roadmap, see
 - Plastic shell supplier simplification skill.
 - Rivet and screw inference skill for small appliance/electrical products.
 - PC hardware layout datums, including motherboard/GPU/case examples.
+- PC cooling datum research, starting with a public 120mm case fan example.
 - FreeCAD and AgentCAD MCP comparison workflows.
