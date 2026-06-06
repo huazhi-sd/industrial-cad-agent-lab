@@ -22,6 +22,13 @@ General CAD agents can call APIs, but they often lack manufacturing judgement. T
 | Torsion spring generation | `skills/torsion-spring` | Draft, usable locally |
 | STEP left-view inspection | `skills/step-inspector` | Draft, validated on G1 meter layout |
 
+## Current tools
+
+| Tool | Path | Status |
+| --- | --- | --- |
+| FreeCAD STEP inspection | `tools/freecad` | Local wrapper for STEP metrics and rule checks |
+| COMSOL baseline automation | `tools/comsol-baseline` | Java API baseline for model inspection, result evaluation, and controlled single-parameter solve |
+
 ## Quick start
 
 Install dependencies:
@@ -82,3 +89,4 @@ For the current AI + industrial CAD workflow roadmap, see
 - PC component layout datums, including motherboard/GPU/case examples.
 - PC cooling datum research, starting with a public 120mm case fan example.
 - FreeCAD and AgentCAD MCP comparison workflows.
+- COMSOL automation baselines for simulation-agent workflows.
