@@ -12,6 +12,9 @@ The baseline was tested on COMSOL Multiphysics 6.3 with a magnetostatic model. N
 
 ## Files
 
+- `comsol_baseline_tool.ps1`
+  Recommended wrapper. It creates an isolated run folder, compiles Java in a temporary build directory, captures stdout and batch logs, extracts CSV blocks, and writes a `manifest.json`.
+
 - `scripts/ComsolBaselineInspector.java`  
   Loads a model and prints parameters, components, geometry features, materials, physics, mesh, studies, datasets, numerical features, and exports.
 
@@ -22,7 +25,7 @@ The baseline was tested on COMSOL Multiphysics 6.3 with a magnetostatic model. N
   Uses `ModelUtil.loadCopy`, changes the study parameter sweep to a single `dt` value, runs `std1`, and evaluates the same four sensor points.
 
 - `run_comsol_baseline.ps1`  
-  Compiles and runs one of the three Java baselines through `comsolcompile.exe` and `comsolbatch.exe`.
+  Legacy minimal runner. Keep this only as a compact reference.
 
 - `sample-output/`  
   Small CSV outputs from the baseline run.
@@ -32,7 +35,7 @@ The baseline was tested on COMSOL Multiphysics 6.3 with a magnetostatic model. N
 Run from Windows PowerShell:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\run_comsol_baseline.ps1 `
+powershell -NoProfile -ExecutionPolicy Bypass -File .\comsol_baseline_tool.ps1 `
   -InputModel "D:\path\to\your_model.mph" `
   -Mode inspect
 ```
@@ -40,7 +43,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\run_comsol_baseline.ps1 `
 Read existing solution data:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\run_comsol_baseline.ps1 `
+powershell -NoProfile -ExecutionPolicy Bypass -File .\comsol_baseline_tool.ps1 `
   -InputModel "D:\path\to\your_model.mph" `
   -Mode sensor `
   -DatasetTag dset4
@@ -49,18 +52,46 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\run_comsol_baseline.ps1 `
 Run a controlled single-parameter solve:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\run_comsol_baseline.ps1 `
+powershell -NoProfile -ExecutionPolicy Bypass -File .\comsol_baseline_tool.ps1 `
   -InputModel "D:\path\to\your_model.mph" `
-  -Mode solve45 `
+  -Mode solve `
   -DtDeg 45
 ```
 
-If COMSOL is installed somewhere else, pass `-ComsolRoot`.
+Run all three baseline checks:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\comsol_baseline_tool.ps1 `
+  -InputModel "D:\path\to\your_model.mph" `
+  -Mode all `
+  -DatasetTag dset4 `
+  -DtDeg 45
+```
+
+If COMSOL is installed somewhere else, pass `-ComsolRoot` or set `COMSOL_ROOT`.
+
+The wrapper writes outputs under `runs/<run-id>/` by default:
+
+- `manifest.json` records the command, input model, COMSOL root, mode list, status, and output paths.
+- `<mode>/<mode>.stdout.txt` captures Java stdout.
+- `<mode>/<mode>.batch.log` captures COMSOL batch logs.
+- `sensor/sensor_eval.csv` is extracted from `SENSOR_EVAL_CSV_BEGIN` / `SENSOR_EVAL_CSV_END`.
+- `solve/single_solve_dt_<value>.csv` is extracted from `SINGLE_SOLVE_CSV_BEGIN` / `SINGLE_SOLVE_CSV_END`.
+
+Use `-DryRun` to verify paths and planned outputs without launching COMSOL:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\comsol_baseline_tool.ps1 `
+  -InputModel "D:\path\to\your_model.mph" `
+  -Mode all `
+  -DryRun
+```
 
 ## Baseline Notes
 
 - `comsolcompile.exe` may return exit code 0 even when compilation fails, so the runner also checks that the `.class` file exists.
 - COMSOL Java security preferences may block direct file writes from a Java class. This baseline writes results to process stdout and lets PowerShell capture them.
+- Java classes are compiled inside each run folder instead of beside the source files, so the repository stays clean.
 - Windows PowerShell 5.1 can misread UTF-8 scripts containing non-ASCII paths if the file is not saved with UTF-8 BOM. The local scripts used during testing were saved with BOM for that reason.
 - The public runner is parameterized and does not include private model paths.
 
