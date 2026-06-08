@@ -29,6 +29,14 @@ General CAD agents can call APIs, but they often lack manufacturing judgement. T
 | FreeCAD STEP inspection | `tools/freecad` | Local wrapper for STEP metrics and rule checks |
 | COMSOL baseline automation | `tools/comsol-baseline` | Java API baseline for model inspection, result evaluation, and controlled single-parameter solve |
 
+## Current public examples
+
+| Example | Path | Purpose |
+| --- | --- | --- |
+| mATX motherboard / GPU datum | `examples/pc-cooling/matx-motherboard-gpu-datum` | PC case layout datum and validation workflow |
+| 120mm fan datum research | `examples/pc-cooling/120mm-fan-datum` | Public datum research before CAD generation |
+| Magnetostatic sensor automation | `examples/comsol/magnetostatic-sensor-baseline` | COMSOL Java API baseline case for sensor result extraction and controlled solve |
+
 ## Quick start
 
 Install dependencies:

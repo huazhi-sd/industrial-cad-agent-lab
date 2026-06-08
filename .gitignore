@@ -8,6 +8,7 @@ build/
 tools/comsol-baseline/runs/
 tools/comsol-baseline/**/*.class
 tools/comsol-baseline/**/*.log
+examples/comsol/**/runs/
 
 # Secrets must stay local.
 .env
