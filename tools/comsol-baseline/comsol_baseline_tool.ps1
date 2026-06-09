@@ -2,7 +2,7 @@ param(
   [Parameter(Mandatory = $true)]
   [string] $InputModel,
 
-  [ValidateSet("inspect", "sensor", "sensor-config", "solve", "all")]
+  [ValidateSet("inspect", "sensor", "sensor-config", "solve", "solve-config", "all")]
   [string] $Mode = "inspect",
 
   [string] $ComsolRoot = "",
@@ -93,6 +93,17 @@ function Get-ModeSpec {
         csvName = "single_solve_dt_$safeDt.csv"
       }
     }
+    "solve-config" {
+      $solveArgs = Get-ConfiguredSolveArgs $ConfigFile $DtDeg
+      $safeValue = ($solveArgs[3] -replace '[^0-9A-Za-z_.-]', '_')
+      return @{
+        className = "ComsolConfiguredSingleSolve"
+        javaArgs = @($InputModel) + $solveArgs
+        csvBegin = "CONFIG_SINGLE_SOLVE_CSV_BEGIN"
+        csvEnd = "CONFIG_SINGLE_SOLVE_CSV_END"
+        csvName = "configured_single_solve_$safeValue.csv"
+      }
+    }
   }
 }
 
@@ -175,6 +186,89 @@ function Get-ConfiguredSensorArgs {
     $phaseColumn,
     $csvHeader,
     $sensorsInline
+  )
+}
+
+function Get-ConfiguredSolveArgs {
+  param(
+    [string] $Path,
+    [string] $ParamOverride
+  )
+
+  if (-not (Test-Path -LiteralPath $Path)) {
+    throw "Config file does not exist: $Path"
+  }
+
+  $props = Read-SimpleProperties $Path
+  $configDir = Split-Path -Parent $Path
+  $sensorFile = $props["sensor_file"]
+  if (-not $sensorFile) {
+    $sensorFile = "sensor_points.csv"
+  }
+  if (-not [System.IO.Path]::IsPathRooted($sensorFile)) {
+    $sensorFile = Join-Path $configDir $sensorFile
+  }
+  if (-not (Test-Path -LiteralPath $sensorFile)) {
+    throw "Sensor file does not exist: $sensorFile"
+  }
+
+  $sensorRows = New-Object System.Collections.Generic.List[string]
+  foreach ($line in Get-Content -LiteralPath $sensorFile) {
+    $trimmed = $line.Trim()
+    if (-not $trimmed -or $trimmed.StartsWith("#")) {
+      continue
+    }
+    if ($trimmed.ToLowerInvariant().StartsWith("name,")) {
+      continue
+    }
+    $cells = $trimmed.Split(",")
+    if ($cells.Length -lt 4) {
+      throw "Invalid sensor row: $trimmed"
+    }
+    $sensorRows.Add(("{0}|{1}|{2}|{3}" -f $cells[0].Trim(), $cells[1].Trim(), $cells[2].Trim(), $cells[3].Trim()))
+  }
+  if ($sensorRows.Count -eq 0) {
+    throw "Sensor file has no sensor points: $sensorFile"
+  }
+
+  $studyTag = if ($props["study_tag"]) { $props["study_tag"] } else { "std1" }
+  $paramFeatureTag = if ($props["param_feature_tag"]) { $props["param_feature_tag"] } else { "param" }
+  $paramName = if ($props["solve_param_name"]) { $props["solve_param_name"] } else { "dt" }
+  $paramValue = if ($props["solve_param_value"]) { $props["solve_param_value"] } else { "45" }
+  if ($ParamOverride) {
+    $paramValue = $ParamOverride
+  }
+  $paramUnit = if ($props["solve_param_unit"]) { $props["solve_param_unit"] } else { "" }
+  if (-not $paramUnit) {
+    $paramUnit = "__EMPTY__"
+  }
+  $resultDataset = "dset4"
+  if ($props["dataset"]) {
+    $resultDataset = $props["dataset"]
+  }
+  if ($props["solve_dataset"]) {
+    $resultDataset = $props["solve_dataset"]
+  }
+  $exprs = if ($props["exprs"]) { $props["exprs"] } else { "mf.Bx,mf.By,mf.Bz,mf.normB" }
+  $units = if ($props["units"]) { $props["units"] } else { "G,G,G,G" }
+  $phaseColumn = if ($props["phase_column"]) { $props["phase_column"] } else { "dt_deg" }
+  $csvHeader = if ($props["csv_header"]) { $props["csv_header"] } else { "sensor,$phaseColumn" }
+  $sensorsInline = [string]::Join(";", $sensorRows)
+  $modelName = if ($props["solve_model_name"]) { $props["solve_model_name"] } else { "ConfiguredSingleSolve" }
+
+  return @(
+    $studyTag,
+    $paramFeatureTag,
+    $paramName,
+    $paramValue,
+    $paramUnit,
+    $resultDataset,
+    $exprs,
+    $units,
+    $phaseColumn,
+    $csvHeader,
+    $sensorsInline,
+    $modelName
   )
 }
 
@@ -344,7 +438,7 @@ if (-not $DryRun -and -not (Test-Path -LiteralPath $InputModel)) {
   throw "Input model does not exist: $InputModel"
 }
 
-if (($Mode -eq "sensor-config" -or $Mode -eq "all") -and -not (Test-Path -LiteralPath $ConfigFile)) {
+if (($Mode -eq "sensor-config" -or $Mode -eq "solve-config" -or $Mode -eq "all") -and -not (Test-Path -LiteralPath $ConfigFile)) {
   throw "Config file does not exist: $ConfigFile"
 }
 
@@ -373,7 +467,7 @@ New-Item -ItemType Directory -Force -Path $RunDir | Out-Null
 
 $modes = @($Mode)
 if ($Mode -eq "all") {
-  $modes = @("inspect", "sensor-config", "solve")
+  $modes = @("inspect", "sensor-config", "solve-config")
 }
 
 $results = New-Object System.Collections.Generic.List[object]

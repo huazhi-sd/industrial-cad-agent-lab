@@ -2,7 +2,7 @@ param(
   [Parameter(Mandatory = $true)]
   [string] $InputModel,
 
-  [ValidateSet("inspect", "sensor", "sensor-config", "solve", "all")]
+  [ValidateSet("inspect", "sensor", "sensor-config", "solve", "solve-config", "all")]
   [string] $Mode = "sensor-config",
 
   [string] $ComsolRoot = "",

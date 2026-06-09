@@ -52,13 +52,14 @@ The default mode is `sensor-config`, which uses `configs/magnetostatic_sensor_ev
 Edit the properties file and `configs/magnetostatic_sensor_points.csv` to change dataset tag, result expressions, phase indices, or sensor coordinates.
 
 The PowerShell wrapper reads these config files and passes resolved values into Java as command-line arguments. This avoids COMSOL Java security restrictions that can block direct file reads from inside the Java class.
+For `solve-config`, `-DtDeg` overrides `solve_param_value` in the properties file.
 
 Run one controlled solve:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\run_case.ps1 `
   -InputModel "D:\path\to\your_model.mph" `
-  -Mode solve `
+  -Mode solve-config `
   -DtDeg 45
 ```
 
@@ -106,14 +107,12 @@ Controlled single solve:
 ## Known Limits
 
 - The model file is private and intentionally excluded.
-- Sensor coordinates and expressions are currently hard-coded in the Java baseline scripts.
-- The `sensor-config` path moves sensor coordinates and expressions into public config files; the older `sensor` and `solve` modes are still hard-coded baseline checks.
-- The controlled solve assumes study tag `std1`, parameter feature tag `param`, parameter name `dt`, and dataset tag `dset4`.
+- The `sensor-config` and `solve-config` paths move sensor coordinates, expressions, study tag, parameter tag, parameter name, and dataset tag into public config files.
+- The older `sensor` and `solve` modes are still hard-coded baseline checks.
 - This is a baseline automation case, not a general COMSOL MCP server yet.
 
 ## Next Improvements
 
-1. Move controlled-solve study tag, parameter tag, parameter name, and result dataset into config.
-2. Add chart generation for `Bx`, `By`, `Bz`, and `normB` across phase angle.
-3. Add an inspection summary that flags missing study, dataset, physics, and result tags before running a solve.
-4. Wrap the same workflow behind a small MCP tool once the command-line contract is stable.
+1. Add chart generation for `Bx`, `By`, `Bz`, and `normB` across phase angle.
+2. Add an inspection summary that flags missing study, dataset, physics, and result tags before running a solve.
+3. Wrap the same workflow behind a small MCP tool once the command-line contract is stable.

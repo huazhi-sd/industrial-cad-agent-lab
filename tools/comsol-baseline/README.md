@@ -8,6 +8,7 @@ It verifies three minimum capabilities:
 2. Read existing solution data from a dataset without rerunning a study.
 3. Modify a study parameter and run one controlled solve.
 4. Run configurable sensor evaluation from a small properties file and sensor-point CSV.
+5. Run a configurable single-parameter solve from the same properties file and sensor-point CSV.
 
 The baseline was tested on COMSOL Multiphysics 6.3 with a magnetostatic model. No model file is included in this public repository.
 
@@ -28,8 +29,11 @@ The baseline was tested on COMSOL Multiphysics 6.3 with a magnetostatic model. N
 - `scripts/ComsolBaselineSingleSolve.java`  
   Uses `ModelUtil.loadCopy`, changes the study parameter sweep to a single `dt` value, runs `std1`, and evaluates the same four sensor points.
 
+- `scripts/ComsolConfiguredSingleSolve.java`
+  Uses `ModelUtil.loadCopy`, changes a configured study parameter, runs the configured study, and evaluates configured sensor points.
+
 - `configs/`
-  Default public sample config for the configurable magnetostatic sensor extraction workflow.
+  Default public sample config for configurable magnetostatic sensor extraction and single-parameter solve workflows.
 
 - `run_comsol_baseline.ps1`  
   Legacy minimal runner. Keep this only as a compact reference.
@@ -74,6 +78,18 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\comsol_baseline_tool.ps1 `
   -DtDeg 45
 ```
 
+Run a controlled single-parameter solve from config:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\comsol_baseline_tool.ps1 `
+  -InputModel "D:\path\to\your_model.mph" `
+  -Mode solve-config `
+  -ConfigFile .\configs\magnetostatic_sensor_eval.properties `
+  -DtDeg 45
+```
+
+`-DtDeg` overrides `solve_param_value` in the config file for quick one-off tests.
+
 Run all three baseline checks:
 
 ```powershell
@@ -94,6 +110,7 @@ The wrapper writes outputs under `runs/<run-id>/` by default:
 - `sensor/sensor_eval.csv` is extracted from `SENSOR_EVAL_CSV_BEGIN` / `SENSOR_EVAL_CSV_END`.
 - `sensor-config/configured_sensor_eval.csv` is extracted from `CONFIG_SENSOR_EVAL_CSV_BEGIN` / `CONFIG_SENSOR_EVAL_CSV_END`.
 - `solve/single_solve_dt_<value>.csv` is extracted from `SINGLE_SOLVE_CSV_BEGIN` / `SINGLE_SOLVE_CSV_END`.
+- `solve-config/configured_single_solve_<value>.csv` is extracted from `CONFIG_SINGLE_SOLVE_CSV_BEGIN` / `CONFIG_SINGLE_SOLVE_CSV_END`.
 
 Use `-DryRun` to verify paths and planned outputs without launching COMSOL:
 
@@ -126,4 +143,4 @@ The internal test model used a parametric sweep:
 
 The `sensor` mode reproduced the existing final CSV values exactly for sampled `Bx` values at `dt = 0, 90, 180`.
 
-The `solve45` mode completed successfully and produced the sample CSV in `sample-output/single_solve_dt45.csv`.
+The `solve` and `solve-config` modes completed successfully and produced the sample CSV in `sample-output/single_solve_dt45.csv`.
