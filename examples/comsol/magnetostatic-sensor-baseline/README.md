@@ -33,6 +33,8 @@ This kind of case is useful when a structure engineer needs to compare magnetic-
 | File | Purpose |
 | --- | --- |
 | `run_case.ps1` | Thin wrapper around `tools/comsol-baseline/comsol_baseline_tool.ps1`. |
+| `configs/magnetostatic_sensor_eval.properties` | Dataset, expressions, units, solution indices, and CSV header. |
+| `configs/magnetostatic_sensor_points.csv` | Public sample sensor names and coordinates. |
 | `sample-output/sensor_eval_sample.csv` | Existing-solution sensor extraction sample. |
 | `sample-output/single_solve_dt45.csv` | Controlled single-solve sample at `dt = 45`. |
 
@@ -43,9 +45,13 @@ From this folder:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\run_case.ps1 `
   -InputModel "D:\path\to\your_model.mph" `
-  -Mode sensor `
-  -DatasetTag dset4
+  -Mode sensor-config
 ```
+
+The default mode is `sensor-config`, which uses `configs/magnetostatic_sensor_eval.properties`.
+Edit the properties file and `configs/magnetostatic_sensor_points.csv` to change dataset tag, result expressions, phase indices, or sensor coordinates.
+
+The PowerShell wrapper reads these config files and passes resolved values into Java as command-line arguments. This avoids COMSOL Java security restrictions that can block direct file reads from inside the Java class.
 
 Run one controlled solve:
 
@@ -101,12 +107,13 @@ Controlled single solve:
 
 - The model file is private and intentionally excluded.
 - Sensor coordinates and expressions are currently hard-coded in the Java baseline scripts.
+- The `sensor-config` path moves sensor coordinates and expressions into public config files; the older `sensor` and `solve` modes are still hard-coded baseline checks.
 - The controlled solve assumes study tag `std1`, parameter feature tag `param`, parameter name `dt`, and dataset tag `dset4`.
 - This is a baseline automation case, not a general COMSOL MCP server yet.
 
 ## Next Improvements
 
-1. Move sensor coordinates, expressions, units, study tag, dataset tag, and parameter name into a JSON config.
+1. Move controlled-solve study tag, parameter tag, parameter name, and result dataset into config.
 2. Add chart generation for `Bx`, `By`, `Bz`, and `normB` across phase angle.
 3. Add an inspection summary that flags missing study, dataset, physics, and result tags before running a solve.
 4. Wrap the same workflow behind a small MCP tool once the command-line contract is stable.

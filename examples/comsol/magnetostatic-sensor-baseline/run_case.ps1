@@ -2,14 +2,16 @@ param(
   [Parameter(Mandatory = $true)]
   [string] $InputModel,
 
-  [ValidateSet("inspect", "sensor", "solve", "all")]
-  [string] $Mode = "sensor",
+  [ValidateSet("inspect", "sensor", "sensor-config", "solve", "all")]
+  [string] $Mode = "sensor-config",
 
   [string] $ComsolRoot = "",
 
   [string] $DatasetTag = "dset4",
 
   [string] $DtDeg = "45",
+
+  [string] $ConfigFile = "",
 
   [string] $OutputDir = "",
 
@@ -32,11 +34,16 @@ if (-not $OutputDir) {
   $OutputDir = Join-Path $CaseRoot "runs"
 }
 
+if (-not $ConfigFile) {
+  $ConfigFile = Join-Path $CaseRoot "configs\magnetostatic_sensor_eval.properties"
+}
+
 $argsForTool = @(
   "-InputModel", $InputModel,
   "-Mode", $Mode,
   "-DatasetTag", $DatasetTag,
   "-DtDeg", $DtDeg,
+  "-ConfigFile", $ConfigFile,
   "-OutputDir", $OutputDir
 )
 
