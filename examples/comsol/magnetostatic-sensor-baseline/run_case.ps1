@@ -17,6 +17,8 @@ param(
 
   [string] $RunId = "",
 
+  [switch] $Report,
+
   [switch] $DryRun
 )
 
@@ -53,6 +55,10 @@ if ($ComsolRoot) {
 
 if ($RunId) {
   $argsForTool += @("-RunId", $RunId)
+}
+
+if ($Report) {
+  $argsForTool += "-Report"
 }
 
 if ($DryRun) {

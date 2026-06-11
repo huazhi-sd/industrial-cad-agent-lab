@@ -105,6 +105,7 @@ If COMSOL is installed somewhere else, pass `-ComsolRoot` or set `COMSOL_ROOT`.
 The wrapper writes outputs under `runs/<run-id>/` by default:
 
 - `manifest.json` records the command, input model, COMSOL root, mode list, status, and output paths.
+- `report.md` is generated when `-Report` is passed. It summarizes mode status, CSV row counts, sensor names, parameter values, and basic `normB` ranges without exposing full local model paths.
 - `<mode>/<mode>.stdout.txt` captures Java stdout.
 - `<mode>/<mode>.batch.log` captures COMSOL batch logs.
 - `sensor/sensor_eval.csv` is extracted from `SENSOR_EVAL_CSV_BEGIN` / `SENSOR_EVAL_CSV_END`.
@@ -120,6 +121,19 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\comsol_baseline_tool.ps1 `
   -Mode all `
   -DryRun
 ```
+
+Generate a human-readable run report:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\comsol_baseline_tool.ps1 `
+  -InputModel "D:\path\to\your_model.mph" `
+  -Mode all `
+  -ConfigFile .\configs\magnetostatic_sensor_eval.properties `
+  -DtDeg 45 `
+  -Report
+```
+
+The report is intended for quick review and project documentation. Use `manifest.json` when an automation needs exact local paths.
 
 ## Baseline Notes
 

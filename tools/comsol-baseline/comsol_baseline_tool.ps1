@@ -17,6 +17,8 @@ param(
 
   [string] $RunId = "",
 
+  [switch] $Report,
+
   [switch] $DryRun
 )
 
@@ -309,6 +311,147 @@ function Export-MarkedBlock {
   return $true
 }
 
+function Get-CsvSummary {
+  param([string] $Path)
+
+  if (-not $Path -or -not (Test-Path -LiteralPath $Path)) {
+    return $null
+  }
+
+  $rows = @(Import-Csv -LiteralPath $Path)
+  $headerLine = Get-Content -LiteralPath $Path -TotalCount 1
+  $columns = @()
+  if ($headerLine) {
+    $columns = $headerLine.Split(",")
+  }
+
+  $summary = [ordered]@{
+    path = $Path
+    file = Split-Path -Leaf $Path
+    rows = $rows.Count
+    columns = $columns
+    sensors = @()
+    parameter_values = @()
+    normB_min = $null
+    normB_max = $null
+  }
+
+  if ($rows.Count -gt 0) {
+    if ($columns -contains "sensor") {
+      $summary.sensors = @($rows | ForEach-Object { $_.sensor } | Sort-Object -Unique)
+    }
+
+    $parameterColumn = @($columns | Where-Object { $_ -match "deg$|angle|phase|dt" } | Select-Object -First 1)
+    if ($parameterColumn.Count -gt 0) {
+      $paramName = $parameterColumn[0]
+      $summary.parameter_column = $paramName
+      $rawParamValues = @($rows | ForEach-Object { $_.$paramName } | Sort-Object -Unique)
+      $allNumeric = $true
+      foreach ($value in $rawParamValues) {
+        $parsedParam = 0.0
+        if (-not [double]::TryParse($value, [System.Globalization.NumberStyles]::Float, [System.Globalization.CultureInfo]::InvariantCulture, [ref] $parsedParam)) {
+          $allNumeric = $false
+          break
+        }
+      }
+      if ($allNumeric) {
+        $summary.parameter_values = @($rawParamValues | Sort-Object { [double]::Parse($_, [System.Globalization.CultureInfo]::InvariantCulture) })
+      } else {
+        $summary.parameter_values = $rawParamValues
+      }
+    }
+
+    $normColumn = @($columns | Where-Object { $_ -match "^normB|normB_" } | Select-Object -First 1)
+    if ($normColumn.Count -gt 0) {
+      $normName = $normColumn[0]
+      $values = @($rows | ForEach-Object {
+        $parsed = 0.0
+        if ([double]::TryParse($_.$normName, [System.Globalization.NumberStyles]::Float, [System.Globalization.CultureInfo]::InvariantCulture, [ref] $parsed)) {
+          $parsed
+        }
+      })
+      if ($values.Count -gt 0) {
+        $summary.normB_column = $normName
+        $summary.normB_min = ($values | Measure-Object -Minimum).Minimum
+        $summary.normB_max = ($values | Measure-Object -Maximum).Maximum
+      }
+    }
+  }
+
+  return $summary
+}
+
+function New-ComsolRunReport {
+  param(
+    [hashtable] $Manifest,
+    [string] $OutputFile
+  )
+
+  $lines = New-Object System.Collections.Generic.List[string]
+  $lines.Add("# COMSOL Baseline Run Report")
+  $lines.Add("")
+  $lines.Add(("Run ID: {0}" -f $Manifest.run_id))
+  $lines.Add(("Mode: {0}" -f $Manifest.mode))
+  $lines.Add(("Status: {0}" -f $Manifest.status))
+  $lines.Add(("Dry run: {0}" -f $Manifest.dry_run))
+  $lines.Add(("Input model: {0}" -f (Split-Path -Leaf $Manifest.input_model)))
+  $lines.Add(("Config file: {0}" -f (Split-Path -Leaf $Manifest.config_file)))
+  $lines.Add(("Dataset tag: {0}" -f $Manifest.dataset_tag))
+  $lines.Add(("Parameter override: {0}" -f $Manifest.dt_deg))
+  $lines.Add("")
+  $lines.Add("## Mode Results")
+  $lines.Add("")
+  $lines.Add("| Mode | Status | Java class | CSV |")
+  $lines.Add("| --- | --- | --- | --- |")
+
+  foreach ($item in $Manifest.results) {
+    $csvName = ""
+    if ($item.csv) {
+      $csvName = Split-Path -Leaf $item.csv
+    }
+    $lines.Add(("| {0} | {1} | {2} | {3} |" -f $item.mode, $item.status, $item.class, $csvName))
+  }
+
+  $csvSummaries = New-Object System.Collections.Generic.List[object]
+  foreach ($item in $Manifest.results) {
+    $summary = Get-CsvSummary $item.csv
+    if ($summary) {
+      $csvSummaries.Add($summary)
+    }
+  }
+
+  if ($csvSummaries.Count -gt 0) {
+    $lines.Add("")
+    $lines.Add("## CSV Summary")
+    foreach ($summary in $csvSummaries) {
+      $lines.Add("")
+      $lines.Add(("### {0}" -f $summary.file))
+      $lines.Add("")
+      $lines.Add(("- Rows: {0}" -f $summary.rows))
+      $lines.Add(("- Columns: {0}" -f ([string]::Join(", ", $summary.columns))))
+      if ($summary.sensors.Count -gt 0) {
+        $lines.Add(("- Sensors: {0}" -f ([string]::Join(", ", $summary.sensors))))
+      }
+      if ($summary.parameter_column) {
+        $lines.Add(("- Parameter column: {0}" -f $summary.parameter_column))
+        $lines.Add(("- Parameter values: {0}" -f ([string]::Join(", ", $summary.parameter_values))))
+      }
+      if ($null -ne $summary.normB_min -and $null -ne $summary.normB_max) {
+        $lines.Add(("- {0} range: {1:G6} to {2:G6}" -f $summary.normB_column, $summary.normB_min, $summary.normB_max))
+      }
+    }
+  }
+
+  $lines.Add("")
+  $lines.Add("## Notes")
+  $lines.Add("")
+  $lines.Add("- This report is generated from manifest.json and extracted CSV files.")
+  $lines.Add("- Full local paths are intentionally omitted from the report body; use manifest.json for local traceability.")
+
+  $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+  [System.IO.File]::WriteAllLines($OutputFile, $lines, $utf8NoBom)
+}
+
 function Invoke-ComsolMode {
   param(
     [string] $RunMode,
@@ -499,9 +642,18 @@ $json = $manifest | ConvertTo-Json -Depth 8
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText($manifestFile, $json, $utf8NoBom)
 
+$reportFile = ""
+if ($Report) {
+  $reportFile = Join-Path $RunDir "report.md"
+  New-ComsolRunReport -Manifest $manifest -OutputFile $reportFile
+}
+
 Write-Host "COMSOL baseline tool complete."
 Write-Host "RunDir:   $RunDir"
 Write-Host "Manifest: $manifestFile"
+if ($reportFile) {
+  Write-Host "Report:   $reportFile"
+}
 foreach ($item in $results) {
   Write-Host ("- {0}: {1}" -f $item.mode, $item.status)
   if ($item.csv) {

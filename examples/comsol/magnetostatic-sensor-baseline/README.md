@@ -73,6 +73,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\run_case.ps1 `
   -DtDeg 45
 ```
 
+Add `-Report` to generate `runs/<run-id>/report.md`, a short human-readable summary of mode status and extracted CSV data.
+
 If COMSOL is installed outside the common paths, pass `-ComsolRoot` or set `COMSOL_ROOT`.
 
 ## Sample Results
@@ -103,6 +105,7 @@ Controlled single solve:
 - Existing model results can be inspected and exported without rerunning the full study.
 - A copied model can be modified and solved for a controlled parameter value.
 - The output is small, reviewable, and suitable for downstream agent workflows.
+- `report.md` provides a quick review artifact for humans, while `manifest.json` remains the machine-readable trace.
 
 ## Known Limits
 
