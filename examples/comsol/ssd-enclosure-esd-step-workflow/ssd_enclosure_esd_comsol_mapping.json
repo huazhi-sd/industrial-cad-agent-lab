@@ -1,0 +1,729 @@
+{
+  "schema": "cad_to_comsol_esd_object_mapping.v0",
+  "tolerance_mm": 0.01,
+  "comsol_object_count": 40,
+  "manifest_solid_count": 40,
+  "all_matched": true,
+  "matches": [
+    {
+      "comsol_object": "imp1.SOLID(1)",
+      "bbox_mm": [
+        -67.50250000000001,
+        67.5025,
+        -32.002500000000005,
+        32.002500000000005,
+        -8.002500000000003,
+        26.002499999999998
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "air_domain_esd_clearance_box",
+      "material": "air",
+      "role": "simulation_air_domain",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(1)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(2)",
+      "bbox_mm": [
+        -56.3525,
+        56.002500000000005,
+        -19.002499999999998,
+        19.002499999999998,
+        -0.0024999999999999996,
+        10.202500000000002
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "bottom_shell_transparent_pc",
+      "material": "polycarbonate",
+      "role": "dielectric_shell",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(2)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(3)",
+      "bbox_mm": [
+        -56.002500000000005,
+        56.002500000000005,
+        -19.002499999999998,
+        19.002499999999998,
+        5.922499999999999,
+        12.002500000000001
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "top_shell_transparent_pc",
+      "material": "polycarbonate",
+      "role": "dielectric_shell",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(3)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(4)",
+      "bbox_mm": [
+        -57.4525,
+        -51.747499999999995,
+        -2.6000249999999996,
+        2.6000249999999996,
+        5.2375,
+        5.9625
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(5)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(5)",
+      "bbox_mm": [
+        -50.002500000000005,
+        50.002500000000005,
+        -14.002500000000001,
+        14.002500000000001,
+        2.7975,
+        4.7524999999999995
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(4)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(6)",
+      "bbox_mm": [
+        -16.5025,
+        -7.4975,
+        -12.0025,
+        -2.9974999999999996,
+        3.9475000000000007,
+        4.8525
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(6)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(7)",
+      "bbox_mm": [
+        -10.502500000000001,
+        -5.4975000000000005,
+        5.9975,
+        10.002500000000001,
+        3.9475,
+        4.7524999999999995
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(7)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(8)",
+      "bbox_mm": [
+        -46.902499999999996,
+        -45.0975,
+        9.397499999999999,
+        10.602500000000001,
+        3.9475,
+        4.4525
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(8)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(9)",
+      "bbox_mm": [
+        43.499975,
+        46.502500000000005,
+        -1.5000250000000002,
+        1.5000250000000002,
+        3.9475000000000007,
+        5.0025
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(9)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(10)",
+      "bbox_mm": [
+        -23.002499999999998,
+        -20.997500000000002,
+        10.497499999999999,
+        11.502500000000001,
+        3.9475,
+        4.402499999999999
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(10)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(11)",
+      "bbox_mm": [
+        -19.002499999999998,
+        -16.997500000000002,
+        10.497499999999999,
+        11.502500000000001,
+        3.9475,
+        4.402499999999999
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(11)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(12)",
+      "bbox_mm": [
+        -15.002500000000001,
+        -12.997499999999999,
+        10.497499999999999,
+        11.502500000000001,
+        3.9475,
+        4.402499999999999
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(12)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(13)",
+      "bbox_mm": [
+        -11.002500000000001,
+        -8.997499999999999,
+        10.497499999999999,
+        11.502500000000001,
+        3.9475,
+        4.402499999999999
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(13)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(14)",
+      "bbox_mm": [
+        -7.0025,
+        -4.9975000000000005,
+        10.497499999999999,
+        11.502500000000001,
+        3.9475,
+        4.402499999999999
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(14)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(15)",
+      "bbox_mm": [
+        3.1975000000000002,
+        4.802499999999999,
+        -11.4525,
+        -10.5475,
+        3.9475000000000007,
+        4.3525
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(15)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(16)",
+      "bbox_mm": [
+        7.197499999999999,
+        8.8025,
+        -11.4525,
+        -10.5475,
+        3.9475000000000007,
+        4.3525
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(16)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(17)",
+      "bbox_mm": [
+        11.1975,
+        12.8025,
+        -11.4525,
+        -10.5475,
+        3.9475000000000007,
+        4.3525
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(17)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(18)",
+      "bbox_mm": [
+        15.197500000000002,
+        16.802500000000002,
+        -11.4525,
+        -10.5475,
+        3.9475000000000007,
+        4.3525
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_pcb",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(18)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(19)",
+      "bbox_mm": [
+        -34.7025,
+        -32.497499999999995,
+        -5.2275,
+        -4.772500000000001,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_high_potential_copper",
+      "material": "copper",
+      "role": "high_potential_conductor",
+      "voltage_V": 1000.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(30)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(20)",
+      "bbox_mm": [
+        -34.7025,
+        -32.497499999999995,
+        -6.2275,
+        -5.772500000000001,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_high_potential_copper",
+      "material": "copper",
+      "role": "high_potential_conductor",
+      "voltage_V": 1000.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(29)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(21)",
+      "bbox_mm": [
+        -34.7025,
+        -32.497499999999995,
+        -7.2275,
+        -6.772500000000001,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_high_potential_copper",
+      "material": "copper",
+      "role": "high_potential_conductor",
+      "voltage_V": 1000.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(28)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(22)",
+      "bbox_mm": [
+        -34.7025,
+        -32.497499999999995,
+        -8.227500000000001,
+        -7.772500000000001,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_high_potential_copper",
+      "material": "copper",
+      "role": "high_potential_conductor",
+      "voltage_V": 1000.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(27)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(23)",
+      "bbox_mm": [
+        -6.200024999999999,
+        -3.7975,
+        8.599974999999999,
+        11.000025,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_high_potential_copper",
+      "material": "copper",
+      "role": "high_potential_conductor",
+      "voltage_V": 1000.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(26)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(24)",
+      "bbox_mm": [
+        -18.0025,
+        -9.997499999999999,
+        5.1975,
+        10.4025,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_high_potential_copper",
+      "material": "copper",
+      "role": "high_potential_conductor",
+      "voltage_V": 1000.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(25)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(25)",
+      "bbox_mm": [
+        -46.502500000000005,
+        -16.4975,
+        -2.8024999999999998,
+        -1.5975,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_high_potential_copper",
+      "material": "copper",
+      "role": "high_potential_conductor",
+      "voltage_V": 1000.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(24)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(26)",
+      "bbox_mm": [
+        -49.4025,
+        -46.5975,
+        2.1725,
+        2.6275,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_high_potential_copper",
+      "material": "copper",
+      "role": "high_potential_conductor",
+      "voltage_V": 1000.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(23)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(27)",
+      "bbox_mm": [
+        -49.4025,
+        -46.5975,
+        0.9725,
+        1.4275,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_high_potential_copper",
+      "material": "copper",
+      "role": "high_potential_conductor",
+      "voltage_V": 1000.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(22)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(28)",
+      "bbox_mm": [
+        -49.4025,
+        -46.5975,
+        -0.2275,
+        0.2275,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_high_potential_copper",
+      "material": "copper",
+      "role": "high_potential_conductor",
+      "voltage_V": 1000.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(21)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(29)",
+      "bbox_mm": [
+        -49.4025,
+        -46.5975,
+        -1.4274999999999998,
+        -0.9725,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_high_potential_copper",
+      "material": "copper",
+      "role": "high_potential_conductor",
+      "voltage_V": 1000.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(20)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(30)",
+      "bbox_mm": [
+        -49.4025,
+        -46.5975,
+        -2.6274999999999995,
+        -2.1725,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_high_potential_copper",
+      "material": "copper",
+      "role": "high_potential_conductor",
+      "voltage_V": 1000.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(19)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(31)",
+      "bbox_mm": [
+        42.299974999999996,
+        47.7025,
+        -2.700025,
+        2.700025,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_ground_copper",
+      "material": "copper",
+      "role": "ground_conductor",
+      "voltage_V": 0.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(33)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(32)",
+      "bbox_mm": [
+        -38.0025,
+        -15.997499999999999,
+        7.097499999999999,
+        10.102500000000001,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_ground_copper",
+      "material": "copper",
+      "role": "ground_conductor",
+      "voltage_V": 0.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(32)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(33)",
+      "bbox_mm": [
+        -51.0025,
+        46.002500000000005,
+        -12.7025,
+        12.7025,
+        3.9975,
+        4.0825000000000005
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "main_pcb_ground_copper",
+      "material": "copper",
+      "role": "ground_conductor",
+      "voltage_V": 0.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(31)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(34)",
+      "bbox_mm": [
+        -56.002500000000005,
+        -48.4975,
+        -4.400025,
+        4.400025,
+        3.9975,
+        7.2025
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "usb_c_shell_metal_ground",
+      "material": "stainless_steel_or_shell_metal",
+      "role": "ground_conductor",
+      "voltage_V": 0.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(34)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(35)",
+      "bbox_mm": [
+        -35.002500000000005,
+        45.0025,
+        -11.0025,
+        11.0025,
+        5.0975,
+        6.9525
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "m2_2280_ssd_fr4_and_components",
+      "material": "FR4_simplified",
+      "role": "dielectric_ssd",
+      "voltage_V": null,
+      "manifest_expected_comsol_object": "imp1.SOLID(35)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(36)",
+      "bbox_mm": [
+        41.99997499999999,
+        48.002500000000005,
+        -3.000025,
+        3.000025,
+        6.0975,
+        6.182499999999999
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "ssd_exposed_copper_regions",
+      "material": "copper",
+      "role": "ground_or_floating_conductor",
+      "voltage_V": 0.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(39)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(37)",
+      "bbox_mm": [
+        4.997500000000002,
+        27.0025,
+        -8.002500000000001,
+        8.0025,
+        6.097499999999999,
+        6.182499999999999
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "ssd_exposed_copper_regions",
+      "material": "copper",
+      "role": "ground_or_floating_conductor",
+      "voltage_V": 0.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(38)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(38)",
+      "bbox_mm": [
+        -21.0025,
+        -2.997499999999999,
+        -8.002500000000001,
+        8.0025,
+        6.097499999999999,
+        6.182499999999999
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "ssd_exposed_copper_regions",
+      "material": "copper",
+      "role": "ground_or_floating_conductor",
+      "voltage_V": 0.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(37)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(39)",
+      "bbox_mm": [
+        -34.0025,
+        -28.797500000000003,
+        -10.002500000000001,
+        10.0025,
+        6.097499999999999,
+        6.182499999999999
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "ssd_exposed_copper_regions",
+      "material": "copper",
+      "role": "ground_or_floating_conductor",
+      "voltage_V": 0.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(36)"
+    },
+    {
+      "comsol_object": "imp1.SOLID(40)",
+      "bbox_mm": [
+        42.849975,
+        47.1525,
+        -2.150025,
+        2.150025,
+        4.0475,
+        7.0275
+      ],
+      "match_status": "matched",
+      "max_bbox_delta_mm": 0.0025,
+      "cad_domain": "m2_tail_screw",
+      "material": "steel",
+      "role": "ground_conductor",
+      "voltage_V": 0.0,
+      "manifest_expected_comsol_object": "imp1.SOLID(40)"
+    }
+  ]
+}

@@ -36,6 +36,7 @@ General CAD agents can call APIs, but they often lack manufacturing judgement. T
 | mATX motherboard / GPU datum | `examples/pc-cooling/matx-motherboard-gpu-datum` | PC case layout datum and validation workflow |
 | 120mm fan datum research | `examples/pc-cooling/120mm-fan-datum` | Public datum research before CAD generation |
 | Magnetostatic sensor automation | `examples/comsol/magnetostatic-sensor-baseline` | COMSOL Java API baseline case for sensor result extraction and controlled solve |
+| SSD enclosure ESD STEP workflow | `examples/comsol/ssd-enclosure-esd-step-workflow` | Product STEP import, COMSOL-created air domain, and semantic mapping trial |
 
 ## Quick start
 
