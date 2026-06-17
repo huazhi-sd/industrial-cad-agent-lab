@@ -110,17 +110,17 @@
       "voltage_V": null,
       "notes": "Main PCB dielectric and simplified non-conductor components.",
       "bbox_mm": [
-        -57.45,
+        -50.0,
         50.0,
         -14.0,
         14.0,
         2.8,
-        5.96
+        5.0
       ],
-      "solid_count": 15,
+      "solid_count": 1,
       "expected_comsol_object_range": {
         "start": "imp1.SOLID(4)",
-        "end": "imp1.SOLID(18)"
+        "end": "imp1.SOLID(4)"
       },
       "solid_bboxes_mm": [
         {
@@ -131,161 +131,7 @@
             -14.0,
             14.0,
             2.8,
-            4.75
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(5)",
-          "bbox_mm": [
-            -57.45,
-            -51.75,
-            -2.6,
-            2.6,
-            5.24,
-            5.96
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(6)",
-          "bbox_mm": [
-            -16.5,
-            -7.5,
-            -12.0,
-            -3.0,
-            3.95,
-            4.85
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(7)",
-          "bbox_mm": [
-            -10.5,
-            -5.5,
-            6.0,
-            10.0,
-            3.95,
-            4.75
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(8)",
-          "bbox_mm": [
-            -46.9,
-            -45.1,
-            9.4,
-            10.6,
-            3.95,
-            4.45
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(9)",
-          "bbox_mm": [
-            43.5,
-            46.5,
-            -1.5,
-            1.5,
-            3.95,
             5.0
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(10)",
-          "bbox_mm": [
-            -23.0,
-            -21.0,
-            10.5,
-            11.5,
-            3.95,
-            4.4
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(11)",
-          "bbox_mm": [
-            -19.0,
-            -17.0,
-            10.5,
-            11.5,
-            3.95,
-            4.4
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(12)",
-          "bbox_mm": [
-            -15.0,
-            -13.0,
-            10.5,
-            11.5,
-            3.95,
-            4.4
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(13)",
-          "bbox_mm": [
-            -11.0,
-            -9.0,
-            10.5,
-            11.5,
-            3.95,
-            4.4
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(14)",
-          "bbox_mm": [
-            -7.0,
-            -5.0,
-            10.5,
-            11.5,
-            3.95,
-            4.4
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(15)",
-          "bbox_mm": [
-            3.2,
-            4.8,
-            -11.45,
-            -10.55,
-            3.95,
-            4.35
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(16)",
-          "bbox_mm": [
-            7.2,
-            8.8,
-            -11.45,
-            -10.55,
-            3.95,
-            4.35
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(17)",
-          "bbox_mm": [
-            11.2,
-            12.8,
-            -11.45,
-            -10.55,
-            3.95,
-            4.35
-          ]
-        },
-        {
-          "expected_comsol_object": "imp1.SOLID(18)",
-          "bbox_mm": [
-            15.2,
-            16.8,
-            -11.45,
-            -10.55,
-            3.95,
-            4.35
           ]
         }
       ]
@@ -297,23 +143,23 @@
       "voltage_V": 1000.0,
       "notes": "Approximate VBUS/high-potential copper regions.",
       "bbox_mm": [
-        -49.4,
+        -48.4,
         -3.8,
         -8.225,
         11.0,
         4.0,
         4.08
       ],
-      "solid_count": 12,
+      "solid_count": 13,
       "expected_comsol_object_range": {
-        "start": "imp1.SOLID(19)",
-        "end": "imp1.SOLID(30)"
+        "start": "imp1.SOLID(5)",
+        "end": "imp1.SOLID(17)"
       },
       "solid_bboxes_mm": [
         {
-          "expected_comsol_object": "imp1.SOLID(19)",
+          "expected_comsol_object": "imp1.SOLID(5)",
           "bbox_mm": [
-            -49.4,
+            -48.4,
             -46.6,
             -2.625,
             -2.175,
@@ -322,9 +168,9 @@
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(20)",
+          "expected_comsol_object": "imp1.SOLID(6)",
           "bbox_mm": [
-            -49.4,
+            -48.4,
             -46.6,
             -1.425,
             -0.975,
@@ -333,9 +179,9 @@
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(21)",
+          "expected_comsol_object": "imp1.SOLID(7)",
           "bbox_mm": [
-            -49.4,
+            -48.4,
             -46.6,
             -0.225,
             0.225,
@@ -344,9 +190,9 @@
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(22)",
+          "expected_comsol_object": "imp1.SOLID(8)",
           "bbox_mm": [
-            -49.4,
+            -48.4,
             -46.6,
             0.975,
             1.425,
@@ -355,9 +201,9 @@
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(23)",
+          "expected_comsol_object": "imp1.SOLID(9)",
           "bbox_mm": [
-            -49.4,
+            -48.4,
             -46.6,
             2.175,
             2.625,
@@ -366,18 +212,29 @@
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(24)",
+          "expected_comsol_object": "imp1.SOLID(10)",
           "bbox_mm": [
-            -46.5,
-            -16.5,
-            -2.8,
-            -1.6,
+            -46.0,
+            -36.0,
+            -4.0,
+            -3.0,
             4.0,
             4.08
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(25)",
+          "expected_comsol_object": "imp1.SOLID(11)",
+          "bbox_mm": [
+            -26.0,
+            -18.0,
+            -4.0,
+            -3.0,
+            4.0,
+            4.08
+          ]
+        },
+        {
+          "expected_comsol_object": "imp1.SOLID(12)",
           "bbox_mm": [
             -18.0,
             -10.0,
@@ -388,7 +245,7 @@
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(26)",
+          "expected_comsol_object": "imp1.SOLID(13)",
           "bbox_mm": [
             -6.2,
             -3.8,
@@ -399,7 +256,7 @@
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(27)",
+          "expected_comsol_object": "imp1.SOLID(14)",
           "bbox_mm": [
             -34.7,
             -32.5,
@@ -410,7 +267,7 @@
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(28)",
+          "expected_comsol_object": "imp1.SOLID(15)",
           "bbox_mm": [
             -34.7,
             -32.5,
@@ -421,7 +278,7 @@
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(29)",
+          "expected_comsol_object": "imp1.SOLID(16)",
           "bbox_mm": [
             -34.7,
             -32.5,
@@ -432,7 +289,7 @@
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(30)",
+          "expected_comsol_object": "imp1.SOLID(17)",
           "bbox_mm": [
             -34.7,
             -32.5,
@@ -451,43 +308,120 @@
       "voltage_V": 0.0,
       "notes": "Ground copper regions on main PCB.",
       "bbox_mm": [
-        -51.0,
+        -52.5,
         47.7,
-        -12.7,
-        12.7,
+        -12.6,
+        13.0,
         4.0,
         4.08
       ],
-      "solid_count": 3,
+      "solid_count": 10,
       "expected_comsol_object_range": {
-        "start": "imp1.SOLID(31)",
-        "end": "imp1.SOLID(33)"
+        "start": "imp1.SOLID(18)",
+        "end": "imp1.SOLID(27)"
       },
       "solid_bboxes_mm": [
         {
-          "expected_comsol_object": "imp1.SOLID(31)",
+          "expected_comsol_object": "imp1.SOLID(18)",
           "bbox_mm": [
-            -51.0,
-            46.0,
-            -12.7,
-            12.7,
+            -1.0,
+            33.0,
+            -12.6,
+            -11.4,
             4.0,
             4.08
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(32)",
+          "expected_comsol_object": "imp1.SOLID(19)",
           "bbox_mm": [
-            -38.0,
-            -16.0,
-            7.1,
-            10.1,
+            -1.0,
+            33.0,
+            11.4,
+            12.6,
             4.0,
             4.08
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(33)",
+          "expected_comsol_object": "imp1.SOLID(20)",
+          "bbox_mm": [
+            -52.5,
+            -43.5,
+            -8.0,
+            -6.0,
+            4.0,
+            4.08
+          ]
+        },
+        {
+          "expected_comsol_object": "imp1.SOLID(21)",
+          "bbox_mm": [
+            -52.5,
+            -43.5,
+            6.0,
+            8.0,
+            4.0,
+            4.08
+          ]
+        },
+        {
+          "expected_comsol_object": "imp1.SOLID(22)",
+          "bbox_mm": [
+            -27.0,
+            -9.0,
+            11.0,
+            13.0,
+            4.0,
+            4.08
+          ]
+        },
+        {
+          "expected_comsol_object": "imp1.SOLID(23)",
+          "bbox_mm": [
+            -44.1,
+            -39.9,
+            -12.6,
+            -8.4,
+            4.0,
+            4.08
+          ]
+        },
+        {
+          "expected_comsol_object": "imp1.SOLID(24)",
+          "bbox_mm": [
+            -44.1,
+            -39.9,
+            8.4,
+            12.6,
+            4.0,
+            4.08
+          ]
+        },
+        {
+          "expected_comsol_object": "imp1.SOLID(25)",
+          "bbox_mm": [
+            39.9,
+            44.1,
+            -12.6,
+            -8.4,
+            4.0,
+            4.08
+          ]
+        },
+        {
+          "expected_comsol_object": "imp1.SOLID(26)",
+          "bbox_mm": [
+            39.9,
+            44.1,
+            8.4,
+            12.6,
+            4.0,
+            4.08
+          ]
+        },
+        {
+          "expected_comsol_object": "imp1.SOLID(27)",
           "bbox_mm": [
             42.3,
             47.7,
@@ -506,28 +440,28 @@
       "voltage_V": 0.0,
       "notes": "USB-C connector metal shell.",
       "bbox_mm": [
-        -56.0,
-        -48.5,
-        -4.4,
-        4.4,
-        4.0,
-        7.2
+        -62.5,
+        -59.5,
+        -3.7,
+        3.7,
+        4.2,
+        7.0
       ],
       "solid_count": 1,
       "expected_comsol_object_range": {
-        "start": "imp1.SOLID(34)",
-        "end": "imp1.SOLID(34)"
+        "start": "imp1.SOLID(28)",
+        "end": "imp1.SOLID(28)"
       },
       "solid_bboxes_mm": [
         {
-          "expected_comsol_object": "imp1.SOLID(34)",
+          "expected_comsol_object": "imp1.SOLID(28)",
           "bbox_mm": [
-            -56.0,
-            -48.5,
-            -4.4,
-            4.4,
-            4.0,
-            7.2
+            -62.5,
+            -59.5,
+            -3.7,
+            3.7,
+            4.2,
+            7.0
           ]
         }
       ]
@@ -548,12 +482,12 @@
       ],
       "solid_count": 1,
       "expected_comsol_object_range": {
-        "start": "imp1.SOLID(35)",
-        "end": "imp1.SOLID(35)"
+        "start": "imp1.SOLID(29)",
+        "end": "imp1.SOLID(29)"
       },
       "solid_bboxes_mm": [
         {
-          "expected_comsol_object": "imp1.SOLID(35)",
+          "expected_comsol_object": "imp1.SOLID(29)",
           "bbox_mm": [
             -35.0,
             45.0,
@@ -581,12 +515,12 @@
       ],
       "solid_count": 4,
       "expected_comsol_object_range": {
-        "start": "imp1.SOLID(36)",
-        "end": "imp1.SOLID(39)"
+        "start": "imp1.SOLID(30)",
+        "end": "imp1.SOLID(33)"
       },
       "solid_bboxes_mm": [
         {
-          "expected_comsol_object": "imp1.SOLID(36)",
+          "expected_comsol_object": "imp1.SOLID(30)",
           "bbox_mm": [
             -34.0,
             -28.8,
@@ -597,7 +531,7 @@
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(37)",
+          "expected_comsol_object": "imp1.SOLID(31)",
           "bbox_mm": [
             -21.0,
             -3.0,
@@ -608,7 +542,7 @@
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(38)",
+          "expected_comsol_object": "imp1.SOLID(32)",
           "bbox_mm": [
             5.0,
             27.0,
@@ -619,7 +553,7 @@
           ]
         },
         {
-          "expected_comsol_object": "imp1.SOLID(39)",
+          "expected_comsol_object": "imp1.SOLID(33)",
           "bbox_mm": [
             42.0,
             48.0,
@@ -642,23 +576,23 @@
         47.15,
         -2.15,
         2.15,
-        4.05,
+        6.275,
         7.025
       ],
       "solid_count": 1,
       "expected_comsol_object_range": {
-        "start": "imp1.SOLID(40)",
-        "end": "imp1.SOLID(40)"
+        "start": "imp1.SOLID(34)",
+        "end": "imp1.SOLID(34)"
       },
       "solid_bboxes_mm": [
         {
-          "expected_comsol_object": "imp1.SOLID(40)",
+          "expected_comsol_object": "imp1.SOLID(34)",
           "bbox_mm": [
             42.85,
             47.15,
             -2.15,
             2.15,
-            4.05,
+            6.275,
             7.025
           ]
         }

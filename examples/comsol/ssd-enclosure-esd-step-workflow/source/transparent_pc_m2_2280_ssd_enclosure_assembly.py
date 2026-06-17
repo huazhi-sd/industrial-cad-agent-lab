@@ -219,7 +219,6 @@ def make_main_pcb():
         board = board - Cylinder(radius=1.25, height=3.0).translate((x, y, PCB_Z))
 
     m2_socket = box_at((8.5, 24.0, 0.8), (-31.0, 0, PCB_TOP_Z + 0.4 - EPS))
-    usb_c_tongue = capsule_x(5.7, 5.2, 0.72, (-CASE_L / 2 + 1.4, 0, USB_C_CENTER_Z))
     controller = box_at((9.0, 9.0, 0.9), (-12.0, -7.5, PCB_TOP_Z + 0.45 - EPS))
     regulator = box_at((5.0, 4.0, 0.8), (-8.0, 8.0, PCB_TOP_Z + 0.4 - EPS))
     led = box_at((1.8, 1.2, 0.5), (-46.0, 10.0, PCB_TOP_Z + 0.25 - EPS))
@@ -233,24 +232,24 @@ def make_main_pcb():
         passives.append(box_at((1.6, 0.9, 0.4), (x, -11.0, PCB_TOP_Z + 0.2 - EPS)))
 
     return fuse_all(
-        [board, m2_socket, usb_c_tongue, controller, regulator, led, standoff, *passives],
+        [board, m2_socket, controller, regulator, led, standoff, *passives],
         "main_pcb_fr4_and_components",
     )
 
 
 def make_usb_c_shell_metal():
-    outer = capsule_x(7.5, USB_C_SHELL_W, USB_C_SHELL_H, (-CASE_L / 2 + 3.75, 0, USB_C_CENTER_Z))
-    inner = capsule_x(8.2, USB_C_SHELL_INNER_W, USB_C_SHELL_INNER_H, (-CASE_L / 2 + 3.75, 0, USB_C_CENTER_Z))
-    return Part([outer - inner], label="usb_c_shell_metal_ground")
+    shell = box_at((3.0, 7.4, 2.8), (-61.0, 0, USB_C_CENTER_Z))
+    return Part([shell], label="usb_c_shell_metal_ground")
 
 
 def make_main_pcb_high_voltage_copper():
     z = PCB_TOP_Z + COPPER_T / 2
     usb_vbus_pads = []
     for y in [-2.4, -1.2, 0.0, 1.2, 2.4]:
-        usb_vbus_pads.append(box_at((2.8, 0.45, COPPER_T), (-48.0, y, z)))
+        usb_vbus_pads.append(box_at((1.8, 0.45, COPPER_T), (-47.5, y, z)))
 
-    trace = box_at((30.0, 1.2, COPPER_T), (-31.5, -2.2, z))
+    left_trace = box_at((10.0, 1.0, COPPER_T), (-41.0, -3.5, z))
+    right_trace = box_at((8.0, 1.0, COPPER_T), (-22.0, -3.5, z))
     regulator_pad = box_at((8.0, 5.2, COPPER_T), (-14.0, 7.8, z))
     test_pad = Cylinder(radius=1.2, height=COPPER_T).translate((-5.0, 9.8, z))
     m2_power_fingers = []
@@ -258,7 +257,7 @@ def make_main_pcb_high_voltage_copper():
         m2_power_fingers.append(box_at((2.2, 0.45, COPPER_T), (-33.6, y, z)))
 
     return fuse_all(
-        [*usb_vbus_pads, trace, regulator_pad, test_pad, *m2_power_fingers],
+        [*usb_vbus_pads, left_trace, right_trace, regulator_pad, test_pad, *m2_power_fingers],
         "main_pcb_high_potential_copper",
     )
 
@@ -266,10 +265,11 @@ def make_main_pcb_high_voltage_copper():
 def make_main_pcb_ground_copper():
     z = PCB_TOP_Z + COPPER_T / 2
     regions = [
-        box_at((88.0, 1.4, COPPER_T), (2.0, -12.0, z)),
-        box_at((88.0, 1.4, COPPER_T), (2.0, 12.0, z)),
-        box_at((12.0, 20.0, COPPER_T), (-45.0, 0, z)),
-        box_at((22.0, 3.0, COPPER_T), (-27.0, 8.6, z)),
+        box_at((34.0, 1.2, COPPER_T), (16.0, -12.0, z)),
+        box_at((34.0, 1.2, COPPER_T), (16.0, 12.0, z)),
+        box_at((9.0, 2.0, COPPER_T), (-48.0, -7.0, z)),
+        box_at((9.0, 2.0, COPPER_T), (-48.0, 7.0, z)),
+        box_at((18.0, 2.0, COPPER_T), (-18.0, 12.0, z)),
     ]
     for x, y in PCB_MOUNT_POINTS:
         pad = Cylinder(radius=2.1, height=COPPER_T).translate((x, y, z))
@@ -312,11 +312,9 @@ def make_ssd_exposed_copper():
 
 
 def make_m2_tail_screw():
-    shaft = Cylinder(radius=0.85, height=2.8).translate((M2_SCREW_X, M2_SCREW_Y, PCB_TOP_Z + 1.45))
     head = Cylinder(radius=2.15, height=0.75).translate((M2_SCREW_X, M2_SCREW_Y, SSD_TOP_Z + 0.55))
     drive_slot = box_at((2.6, 0.45, 0.25), (M2_SCREW_X, M2_SCREW_Y, SSD_TOP_Z + 0.95))
-    screw = fuse_all([shaft, head], "m2_tail_screw")
-    screw = Part([screw - drive_slot], label="m2_tail_screw")
+    screw = Part([head - drive_slot], label="m2_tail_screw")
     return screw
 
 
