@@ -238,6 +238,35 @@ E_norm_max=3.57e6 V/m
 
 Reusable command sequence:
 
+One-command orchestrator:
+
+```powershell
+D:\cdxwork\mcp-lab\COMSOL_Multiphysics_MCP\.venv\Scripts\python.exe `
+  .\source\run_comsol_esd_pipeline.py `
+  --delivery-dir D:\cdxwork\26-0507-出图\COMSOL交付-硬盘盒ESD-pipeline
+```
+
+The orchestrator intentionally launches every COMSOL/mph step in a separate
+Python process. This avoids the `mph` limitation that only one COMSOL client can
+be instantiated in a Python session.
+
+Verified orchestrator run:
+
+```text
+pipeline_timestamp=20260618_183627
+domain_count=53
+boundary_count=570
+all_product_matched=True
+mesh_size=8
+solve_status=success
+V_min=-0.013 V
+V_max=1000.000 V
+E_norm_max=3.57e6 V/m
+delivery_mph=D:\cdxwork\26-0507-出图\COMSOL交付-硬盘盒ESD-pipeline\ssd_enclosure_esd_baseline_20260618_183627.mph
+```
+
+Expanded command sequence:
+
 ```powershell
 D:\cdxwork\mcp-lab\COMSOL_Multiphysics_MCP\.venv\Scripts\python.exe `
   .\source\run_comsol_step_import_baseline.py `
