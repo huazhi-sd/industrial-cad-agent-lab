@@ -28,6 +28,7 @@ General CAD agents can call APIs, but they often lack manufacturing judgement. T
 | --- | --- | --- |
 | FreeCAD STEP inspection | `tools/freecad` | Local wrapper for STEP metrics and rule checks |
 | COMSOL baseline automation | `tools/comsol-baseline` | Java API baseline for model inspection, result evaluation, and controlled single-parameter solve |
+| Standard part selection | `tools/standard-parts` | Prototype step.parts query/filter/download layer |
 
 ## Current public examples
 
