@@ -16,6 +16,15 @@ simulation workflow.
   - Intended for direct import into COMSOL.
 - `source/transparent_pc_m2_2280_ssd_enclosure_assembly.py`
   - build123d source for the enclosure assembly.
+- `ssd_enclosure_standard_fastener_trial.step`
+  - Standard-fastener fit trial for the M.2 tail screw and standoff.
+- `source/ssd_enclosure_standard_fastener_trial.py`
+  - build123d source for the standard-fastener trial.
+- `source/validate_ssd_standard_fastener_trial.py`
+  - Lightweight assembly checks for screw axis, standoff height, lid
+    clearance, and screw reach.
+- `ssd_standard_fastener_validation.md`
+  - Human-readable validation report for the standard-fastener trial.
 - `source/ssd_enclosure_esd_sim_simplified.py`
   - Experimental CAD-side semantic-domain export.
   - Useful for manifest and mapping tests, but not the preferred COMSOL setup
@@ -100,6 +109,53 @@ The 40 domains correspond to:
 
 - 39 product solids from the product STEP
 - 1 air domain created after import in COMSOL
+
+## Standard Fastener Fit Trial
+
+Date: 2026-06-24
+
+This trial connects the `standard-part-selection` prototype to a real assembly
+decision in the SSD enclosure.
+
+Standard-part references:
+
+- Installed screw reference: `iso4762_socket_head_cap_screw_m2x3`
+- Rejected boss candidate: `pcb_standoff_boss_m2_h04`
+
+The selected M2x3 socket-head screw fits the current stack. The catalog M2
+4 mm PCB boss does not fit because the PCB-to-SSD gap is only about 1.1 mm.
+The generated trial therefore installs a custom M.2 tail standoff sized from
+the actual assembly gap while keeping the catalog boss as a rejected candidate.
+
+Reusable commands:
+
+```powershell
+python .\source\ssd_enclosure_standard_fastener_trial.py
+python .\source\validate_ssd_standard_fastener_trial.py
+```
+
+Observed checks:
+
+```text
+screw_axis_matches_ssd_tail_hole_axis=pass
+custom_standoff_height_matches_pcb_to_ssd_gap=pass
+catalog_h04_boss_rejected_by_height=pass
+m2x3_screw_has_lid_clearance=pass
+m2x3_screw_reaches_tail_standoff=pass
+```
+
+Key values:
+
+```text
+required_standoff_height=1.1 mm
+catalog_boss_height=4.0 mm
+catalog_boss_too_tall_by=2.9 mm
+screw_lid_clearance=2.1 mm
+screw_engagement_below_pcb_top=0.9 mm
+```
+
+This is the first small example of a standard-part selection layer producing
+an assembly-level decision instead of only downloading or drawing a part.
 
 ## Re-Test With Local COMSOL 6.3
 

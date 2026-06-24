@@ -60,7 +60,9 @@ python .\tools\standard-parts\standard_part_select.py "usb c connector" `
 - Fetches multiple result pages by default, so broad categories such as `screw`
   are not limited to the first API page.
 - Can download STEP files and verify SHA-256 when the API provides a checksum.
-- Does not yet perform fit validation against an assembly.
+- Has one early assembly-fit example in
+  `examples/comsol/ssd-enclosure-esd-step-workflow`, where an M2x3 screw is
+  accepted and an M2 h=4 mm PCB boss is rejected by stack-height checks.
 
 ## Future MCP Direction
 
@@ -72,3 +74,7 @@ This script can become the core of a future `standard-part-selection-mcp`:
 4. Inspect bbox/topology.
 5. Check fit against named assembly features.
 6. Return ranked candidates with uncertainty and provenance.
+
+The SSD enclosure fastener trial is the first seed for step 5. It shows that a
+catalog match is not enough: the M2x3 screw is usable, while the catalog M2
+4 mm boss is too tall for the 1.1 mm PCB-to-SSD gap and must be rejected.
