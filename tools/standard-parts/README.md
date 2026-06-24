@@ -44,10 +44,21 @@ python .\tools\standard-parts\standard_part_select.py standoff `
   --limit 5
 ```
 
+Find a USB-C connector by model substring:
+
+```powershell
+python .\tools\standard-parts\standard_part_select.py "usb c connector" `
+  --family connector-usb `
+  --contains attributes.model=USB_C `
+  --limit 8
+```
+
 ## Current Scope
 
 - Uses the public `https://api.step.parts/v1/parts` endpoint.
 - Outputs JSON for agent use.
+- Fetches multiple result pages by default, so broad categories such as `screw`
+  are not limited to the first API page.
 - Can download STEP files and verify SHA-256 when the API provides a checksum.
 - Does not yet perform fit validation against an assembly.
 

@@ -30,12 +30,13 @@ def query_parts(
     origin: str,
     query: str | None,
     page_size: int,
+    page: int = 1,
     category: str | None = None,
     family: str | None = None,
     tag: list[str] | None = None,
     standard: str | None = None,
 ) -> dict[str, Any]:
-    params: list[tuple[str, str | int]] = [("pageSize", page_size)]
+    params: list[tuple[str, str | int]] = [("pageSize", page_size), ("page", page)]
     if query:
         params.append(("q", query))
     if category:
@@ -50,6 +51,47 @@ def query_parts(
     return fetch_json(url)
 
 
+def query_all_parts(
+    origin: str,
+    query: str | None,
+    page_size: int,
+    max_pages: int,
+    category: str | None = None,
+    family: str | None = None,
+    tag: list[str] | None = None,
+    standard: str | None = None,
+) -> dict[str, Any]:
+    first = query_parts(
+        origin=origin,
+        query=query,
+        page_size=page_size,
+        page=1,
+        category=category,
+        family=family,
+        tag=tag,
+        standard=standard,
+    )
+    items = list(first.get("items", []))
+    total_pages = int(first.get("totalPages") or 1)
+    pages_to_fetch = min(total_pages, max_pages)
+    for page in range(2, pages_to_fetch + 1):
+        data = query_parts(
+            origin=origin,
+            query=query,
+            page_size=page_size,
+            page=page,
+            category=category,
+            family=family,
+            tag=tag,
+            standard=standard,
+        )
+        items.extend(data.get("items", []))
+    first["items"] = items
+    first["pagesFetched"] = pages_to_fetch
+    first["truncatedByMaxPages"] = total_pages > max_pages
+    return first
+
+
 def get_nested(record: dict[str, Any], dotted_key: str) -> Any:
     value: Any = record
     for part in dotted_key.split("."):
@@ -60,13 +102,33 @@ def get_nested(record: dict[str, Any], dotted_key: str) -> Any:
 
 
 def normalize(value: Any) -> str:
-    return str(value).strip().lower()
+    text = str(value).strip().lower()
+    if text.startswith("m") and "p" in text:
+        text = text.replace("p", ".")
+    return text
+
+
+def values_equal(actual: Any, expected: str) -> bool:
+    if normalize(actual) == normalize(expected):
+        return True
+    try:
+        return abs(float(actual) - float(expected)) < 1e-9
+    except (TypeError, ValueError):
+        return False
 
 
 def matches(record: dict[str, Any], filters: dict[str, str]) -> bool:
     for key, expected in filters.items():
         actual = get_nested(record, key)
-        if normalize(actual) != normalize(expected):
+        if not values_equal(actual, expected):
+            return False
+    return True
+
+
+def contains_matches(record: dict[str, Any], filters: dict[str, str]) -> bool:
+    for key, expected in filters.items():
+        actual = get_nested(record, key)
+        if normalize(expected) not in normalize(actual):
             return False
     return True
 
@@ -131,6 +193,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("query", nargs="?", help="step.parts text query, e.g. 'M2 screw'")
     parser.add_argument("--origin", default=DEFAULT_ORIGIN)
     parser.add_argument("--page-size", type=int, default=500)
+    parser.add_argument("--max-pages", type=int, default=10)
     parser.add_argument("--category")
     parser.add_argument("--family")
     parser.add_argument("--tag", action="append", default=[])
@@ -140,6 +203,12 @@ def main(argv: list[str] | None = None) -> int:
         action="append",
         default=[],
         help="Structured exact filter, e.g. attributes.thread=M2",
+    )
+    parser.add_argument(
+        "--contains",
+        action="append",
+        default=[],
+        help="Structured substring filter, e.g. attributes.model=USB_C",
     )
     parser.add_argument(
         "--prefer-length",
@@ -154,17 +223,23 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args(argv)
 
-    data = query_parts(
+    data = query_all_parts(
         origin=args.origin,
         query=args.query,
         page_size=args.page_size,
+        max_pages=args.max_pages,
         category=args.category,
         family=args.family,
         tag=args.tag,
         standard=args.standard,
     )
     filters = parse_filter(args.filter)
-    records = [item for item in data.get("items", []) if matches(item, filters)]
+    contains_filters = parse_filter(args.contains)
+    records = [
+        item
+        for item in data.get("items", [])
+        if matches(item, filters) and contains_matches(item, contains_filters)
+    ]
     preferred_lengths = set(args.prefer_length)
     records.sort(key=lambda item: rank_record(item, preferred_lengths))
     selected = records[: args.limit]
@@ -173,12 +248,15 @@ def main(argv: list[str] | None = None) -> int:
         "query": args.query,
         "catalog": data.get("catalog"),
         "apiTotal": data.get("total"),
+        "pagesFetched": data.get("pagesFetched"),
+        "truncatedByMaxPages": data.get("truncatedByMaxPages"),
         "filters": {
             "category": args.category,
             "family": args.family,
             "tag": args.tag,
             "standard": args.standard,
             "structured": filters,
+            "contains": contains_filters,
         },
         "matched": len(records),
         "items": selected,
